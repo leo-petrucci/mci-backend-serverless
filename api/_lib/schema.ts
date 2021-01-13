@@ -66,64 +66,7 @@ const Query = objectType({
 
 const Mutation = objectType({
   name: 'Mutation',
-  definition(t) {
-    t.crud.createOneUser({ alias: 'signupUser' })
-    t.crud.deleteOnePost()
-
-    t.list.field('seed', {
-      type: 'User',
-      resolve: async (_, args, ctx) => {
-        await ctx.prisma.post.deleteMany({})
-        await ctx.prisma.profile.deleteMany({})
-        await ctx.prisma.user.deleteMany({})
-
-        const createdUsers = []
-        for (const userData of seedUsers) {
-          const createdUser = await ctx.prisma.user.create({
-            data: userData,
-            include: { posts: true },
-          })
-          createdUsers.push(createdUser)
-        }
-
-        return createdUsers
-      },
-    })
-
-    t.field('createDraft', {
-      type: 'Post',
-      args: {
-        title: nonNull(stringArg()),
-        content: stringArg(),
-        authorEmail: nonNull(stringArg()),
-      },
-      resolve: (_, { title, content, authorEmail }, ctx) => {
-        return ctx.prisma.post.create({
-          data: {
-            title,
-            content,
-            published: false,
-            author: {
-              connect: { email: authorEmail },
-            },
-          },
-        })
-      },
-    })
-
-    t.nullable.field('publish', {
-      type: 'Post',
-      args: {
-        id: intArg(),
-      },
-      resolve: (_, { id }, ctx) => {
-        return ctx.prisma.post.update({
-          where: { id: Number(id) },
-          data: { published: true },
-        })
-      },
-    })
-  },
+  definition(t) {},
 })
 
 const generateArtifacts = Boolean(process.env.GENERATE_ARTIFACTS)
