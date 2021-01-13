@@ -7,6 +7,8 @@ import * as types from './types'
 const Query = objectType({
   name: 'Query',
   definition(t) {
+    t.crud.user()
+
     t.list.field('servers', {
       type: 'Server',
       resolve: (_, args, ctx) => {
