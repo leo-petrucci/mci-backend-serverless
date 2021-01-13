@@ -14,3 +14,10 @@ export const Server = objectType({
     t.model.cover()
   },
 })
+
+export const VoteCast = objectType({
+  name: 'VoteCast',
+  definition(t) {
+    t.field('outcome', { type: 'String' })
+  },
+})
