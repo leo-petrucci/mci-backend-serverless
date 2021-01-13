@@ -40,7 +40,7 @@ const Mutation = objectType({
 const generateArtifacts = Boolean(process.env.GENERATE_ARTIFACTS)
 
 export const schema = makeSchema({
-  types: [Query, Mutation, Server, VoteCast],
+  types: [Server, VoteCast],
   plugins: [
     nexusPrisma({
       experimentalCRUD: true,
