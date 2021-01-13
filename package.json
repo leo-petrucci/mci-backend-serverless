@@ -17,6 +17,7 @@
     "cookie": "^0.4.1",
     "graphql": "15.4.0",
     "graphql-shield": "^7.5.0",
+    "graphql-tag": "^2.11.0",
     "nexus": "1.0.0",
     "nexus-plugin-prisma": "0.28.0"
   },
