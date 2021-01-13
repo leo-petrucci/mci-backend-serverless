@@ -13,6 +13,7 @@
     "@prisma/client": "2.14.0",
     "@types/mocha": "^8.2.0",
     "@types/node-fetch": "2.5.7",
+    "@types/yup": "^0.29.11",
     "apollo-server-micro": "2.19.1",
     "axios": "^0.21.1",
     "cookie": "^0.4.1",
