@@ -55,47 +55,10 @@ const Server = objectType({
 const Query = objectType({
   name: 'Query',
   definition(t) {
-    t.crud.post()
-    t.crud.profile()
-    t.crud.users()
-
     t.list.field('servers', {
       type: 'Server',
       resolve: (_, args, ctx) => {
         return ctx.prisma.server.findMany()
-      },
-    })
-
-    t.list.field('allProfiles', {
-      type: 'Profile',
-      resolve: (_, args, ctx) => {
-        return ctx.prisma.profile.findMany()
-      },
-    })
-
-    t.list.field('feed', {
-      type: 'Post',
-      resolve: (_, args, ctx) => {
-        return ctx.prisma.post.findMany({
-          where: { published: true },
-        })
-      },
-    })
-
-    t.list.field('filterPosts', {
-      type: 'Post',
-      args: {
-        searchString: nonNull(stringArg()),
-      },
-      resolve: (_, { searchString }, ctx) => {
-        return ctx.prisma.post.findMany({
-          where: {
-            OR: [
-              { title: { contains: searchString } },
-              { content: { contains: searchString } },
-            ],
-          },
-        })
       },
     })
   },
