@@ -27,7 +27,6 @@ export const Vote = objectType({
   definition(t) {
     t.model.id()
     t.model.createdAt()
-    t.model.author()
     t.model.server()
   },
 })
