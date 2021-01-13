@@ -18,8 +18,10 @@
     "graphql": "15.4.0",
     "graphql-shield": "^7.5.0",
     "graphql-tag": "^2.11.0",
+    "jsonwebtoken": "^8.5.1",
     "nexus": "1.0.0",
-    "nexus-plugin-prisma": "0.28.0"
+    "nexus-plugin-prisma": "0.28.0",
+    "querystring": "^0.2.0"
   },
   "devDependencies": {
     "@now/node": "1.8.5",
