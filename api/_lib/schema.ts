@@ -59,6 +59,13 @@ const Query = objectType({
     t.crud.profile()
     t.crud.users()
 
+    t.list.field('servers', {
+      type: 'Server',
+      resolve: (parent, args, ctx) => {
+        return ctx.prisma.server.findMany()
+      },
+    })
+
     t.list.field('allProfiles', {
       type: 'Profile',
       resolve: (_, args, ctx) => {
