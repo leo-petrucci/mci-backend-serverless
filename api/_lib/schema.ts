@@ -61,7 +61,7 @@ const Query = objectType({
 
     t.list.field('servers', {
       type: 'Server',
-      resolve: (parent, args, ctx) => {
+      resolve: (_, args, ctx) => {
         return ctx.prisma.server.findMany()
       },
     })
@@ -166,7 +166,7 @@ const Mutation = objectType({
 const generateArtifacts = Boolean(process.env.GENERATE_ARTIFACTS)
 
 export const schema = makeSchema({
-  types: [Query, Mutation, Post, User, Profile],
+  types: [Query, Mutation, Server, Post, User, Profile],
   plugins: [
     nexusPrisma({
       experimentalCRUD: true,
