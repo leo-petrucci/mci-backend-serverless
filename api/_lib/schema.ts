@@ -3,40 +3,6 @@ import { nexusPrisma } from 'nexus-plugin-prisma'
 import path from 'path'
 import { seedUsers } from './seed'
 
-const User = objectType({
-  name: 'User',
-  definition(t) {
-    t.model.id()
-    t.model.name()
-    t.model.email()
-    t.model.posts({
-      pagination: false,
-    })
-  },
-})
-
-const Post = objectType({
-  name: 'Post',
-  definition(t) {
-    t.model.id()
-    t.model.title()
-    t.model.content()
-    t.model.published()
-    t.model.author()
-    t.model.authorId()
-  },
-})
-
-const Profile = objectType({
-  name: 'Profile',
-  definition(t) {
-    t.model.id()
-    t.model.bio()
-    t.model.user()
-    t.model.userId()
-  },
-})
-
 const Server = objectType({
   name: 'Server',
   definition(t) {
@@ -88,7 +54,7 @@ const Mutation = objectType({
 const generateArtifacts = Boolean(process.env.GENERATE_ARTIFACTS)
 
 export const schema = makeSchema({
-  types: [Query, Mutation, Server, Post, User, Profile],
+  types: [Query, Mutation, Server],
   plugins: [
     nexusPrisma({
       experimentalCRUD: true,
