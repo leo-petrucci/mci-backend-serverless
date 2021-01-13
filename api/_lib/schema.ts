@@ -2,7 +2,7 @@ import { intArg, makeSchema, nonNull, objectType, stringArg } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 import path from 'path'
 import { seedUsers } from './seed'
-import { Server, VoteCast } from './types'
+import { Server, VoteCast, Vote } from './types'
 
 const Query = objectType({
   name: 'Query',
@@ -40,7 +40,7 @@ const Mutation = objectType({
 const generateArtifacts = Boolean(process.env.GENERATE_ARTIFACTS)
 
 export const schema = makeSchema({
-  types: [Query, Mutation, Server, VoteCast],
+  types: [Query, Mutation, Server, VoteCast, Vote],
   plugins: [
     nexusPrisma({
       experimentalCRUD: true,

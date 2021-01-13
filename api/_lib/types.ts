@@ -21,3 +21,13 @@ export const VoteCast = objectType({
     t.field('outcome', { type: 'String' })
   },
 })
+
+export const Vote = objectType({
+  name: 'Vote',
+  definition(t) {
+    t.model.id()
+    t.model.createdAt()
+    t.model.author()
+    t.model.server()
+  },
+})
