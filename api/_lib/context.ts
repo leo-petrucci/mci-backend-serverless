@@ -7,8 +7,15 @@ const prisma = new PrismaClient({
 
 export interface Context {
   prisma: PrismaClient
+  res: any
+  req: any
 }
 
-export function createContext(): Context {
-  return { prisma }
+// @ts-ignore
+export function createContext({ request, response, ...rest }: Context) {
+  return {
+    req: request,
+    res: response,
+    prisma,
+  }
 }
