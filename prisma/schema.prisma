@@ -7,6 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+model Server {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  lastUpdated DateTime @default(now())
+  cover     String?
+  slots     Int
+  ip        String   @default("")
+  authorId  Int
+  versionId Int
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
 model User {
   id      Int      @default(autoincrement()) @id
   email   String   @unique
