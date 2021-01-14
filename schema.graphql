@@ -14,8 +14,6 @@ type Mutation {
 
 type Query {
   servers: [Server]
-  user(where: UserWhereUniqueInput!): User
-  votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
 }
 
 type Server {
@@ -71,18 +69,11 @@ type User {
   id: Int!
   photoUrl: Boolean
   role: String
-  Servers(after: ServerWhereUniqueInput, before: ServerWhereUniqueInput, first: Int, last: Int): [Server!]!
-  username: String!
-  Votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
+  username: String
 }
 
 type UserPayload {
   user: User
-}
-
-input UserWhereUniqueInput {
-  email: String
-  id: Int
 }
 
 type Version {

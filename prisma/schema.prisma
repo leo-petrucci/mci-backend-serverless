@@ -33,8 +33,8 @@ model User {
   photoUrl String   @default("")
   posts    Int      @default(0)
   banned   Boolean  @default(false)
-  Servers  Server[]
-  Votes    Vote[]
+  servers  Server[] 
+  votes    Vote[]
 }
 
 model Tag {
