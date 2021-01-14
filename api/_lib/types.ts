@@ -7,8 +7,8 @@ export const User = objectType({
     t.field('username', { type: 'String' })
     t.model.email()
     t.field('role', { type: 'String' })
-    t.model.banned()
-    t.model.photoUrl()
+    t.field('banned', { type: 'Boolean' })
+    t.field('photoUrl', { type: 'Boolean' })
     t.model.Votes()
     t.model.Servers()
   },
