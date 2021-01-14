@@ -8,6 +8,7 @@ const Query = objectType({
   name: 'Query',
   definition(t) {
     t.crud.user()
+    t.crud.votes()
 
     t.list.field('servers', {
       type: 'Server',
