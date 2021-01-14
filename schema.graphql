@@ -2,86 +2,105 @@
 ### Do not make changes to this file directly
 
 
+type AuthPayload {
+  user: User
+}
+
 scalar DateTime
 
 type Mutation {
-  createDraft(authorEmail: String!, content: String, title: String!): Post
-  deleteOnePost(where: PostWhereUniqueInput!): Post
-  publish(id: Int): Post
-  seed: [User]
-  signupUser(data: UserCreateInput!): User!
-}
-
-type Post {
-  author: User!
-  authorId: Int!
-  content: String
-  id: Int!
-  published: Boolean!
-  title: String!
-}
-
-input PostCreateManyWithoutAuthorInput {
-  connect: [PostWhereUniqueInput!]
-  create: [PostCreateWithoutAuthorInput!]
-}
-
-input PostCreateWithoutAuthorInput {
-  content: String
-  createdAt: DateTime
-  published: Boolean
-  title: String!
-}
-
-input PostWhereUniqueInput {
-  id: Int
-}
-
-type Profile {
-  bio: String
-  id: Int!
-  user: User!
-  userId: Int!
-}
-
-input ProfileCreateOneWithoutUserInput {
-  connect: ProfileWhereUniqueInput
-  create: ProfileCreateWithoutUserInput
-}
-
-input ProfileCreateWithoutUserInput {
-  bio: String
-}
-
-input ProfileWhereUniqueInput {
-  id: Int
-  userId: Int
+  updateTitle(id: Int!, title: String!): Server
 }
 
 type Query {
-  allProfiles: [Profile]
-  feed: [Post]
-  filterPosts(searchString: String!): [Post]
-  post(where: PostWhereUniqueInput!): Post
-  profile(where: ProfileWhereUniqueInput!): Profile
-  users(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int): [User!]!
+  servers: [Server]
+  user(where: UserWhereUniqueInput!): User
+}
+
+type Server {
+  author: User!
+  canVote: Boolean
+  content: String
+  cover: String
+  createdAt: DateTime!
+  id: Int!
+  ip: String!
+  lastUpdated: DateTime!
+  published: Boolean!
+  slots: Int!
+  tags(after: TagWhereUniqueInput, before: TagWhereUniqueInput, first: Int, last: Int): [Tag!]!
+  title: String!
+  version: Version!
+  voteCount: Int
+  votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
+}
+
+type ServerPayload {
+  author: Int
+  content: String
+  cover: String
+  createdAt: String
+  id: Int
+  published: Boolean
+  slots: Int
+  tags: Tag
+  title: String
+  version: Version
+}
+
+input ServerWhereUniqueInput {
+  id: Int
+}
+
+type Tag {
+  id: Int!
+  popularity: Int
+  Servers(after: ServerWhereUniqueInput, before: ServerWhereUniqueInput, first: Int, last: Int): [Server!]!
+  tagName: String!
+}
+
+input TagWhereUniqueInput {
+  id: Int
+  tagName: String
 }
 
 type User {
+  banned: Boolean!
   email: String!
   id: Int!
-  name: String
-  posts: [Post!]!
+  photoUrl: String!
+  role: String!
+  Servers(after: ServerWhereUniqueInput, before: ServerWhereUniqueInput, first: Int, last: Int): [Server!]!
+  Votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
 }
 
-input UserCreateInput {
-  email: String!
-  name: String
-  posts: PostCreateManyWithoutAuthorInput
-  profile: ProfileCreateOneWithoutUserInput
+type UserPayload {
+  user: User
 }
 
 input UserWhereUniqueInput {
   email: String
+  id: Int
+}
+
+type Version {
+  id: Int!
+  Servers(after: ServerWhereUniqueInput, before: ServerWhereUniqueInput, first: Int, last: Int): [Server!]!
+  versionName: String!
+}
+
+type Vote {
+  author: User!
+  createdAt: DateTime!
+  id: Int!
+  server: Server!
+}
+
+type VoteCast {
+  outcome: String
+}
+
+input VoteWhereUniqueInput {
+  createdAt: DateTime
   id: Int
 }
