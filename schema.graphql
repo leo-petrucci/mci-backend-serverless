@@ -6,8 +6,6 @@ type AuthPayload {
   user: User
 }
 
-scalar DateTime
-
 type Mutation {
   updateTitle(id: Int!, title: String!): Server
 }
@@ -17,21 +15,19 @@ type Query {
 }
 
 type Server {
-  author: User!
+  author: Int
   canVote: Boolean
   content: String
   cover: String
-  createdAt: DateTime!
-  id: Int!
-  ip: String!
-  lastUpdated: DateTime!
-  published: Boolean!
-  slots: Int!
-  tags(after: TagWhereUniqueInput, before: TagWhereUniqueInput, first: Int, last: Int): [Tag!]!
-  title: String!
-  version: Version!
+  createdAt: String
+  id: Int
+  published: Boolean
+  slots: Int
+  tags: Tag
+  title: String
+  version: Version
   voteCount: Int
-  votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
+  votes: Vote
 }
 
 type ServerPayload {
@@ -47,26 +43,17 @@ type ServerPayload {
   version: Version
 }
 
-input ServerWhereUniqueInput {
-  id: Int
-}
-
 type Tag {
-  id: Int!
-  popularity: Int
-  Servers(after: ServerWhereUniqueInput, before: ServerWhereUniqueInput, first: Int, last: Int): [Server!]!
-  tagName: String!
-}
-
-input TagWhereUniqueInput {
   id: Int
+  popularity: Int
+  Servers: Server
   tagName: String
 }
 
 type User {
   banned: Boolean
-  email: String!
-  id: Int!
+  email: String
+  id: Int
   photoUrl: Boolean
   role: String
   Server: Server
@@ -79,23 +66,18 @@ type UserPayload {
 }
 
 type Version {
-  id: Int!
-  Servers(after: ServerWhereUniqueInput, before: ServerWhereUniqueInput, first: Int, last: Int): [Server!]!
-  versionName: String!
+  id: Int
+  Servers: Server
+  versionName: String
 }
 
 type Vote {
-  author: User!
-  createdAt: DateTime!
-  id: Int!
-  server: Server!
+  author: User
+  createdAt: String
+  id: Int
+  server: Server
 }
 
 type VoteCast {
   outcome: String
-}
-
-input VoteWhereUniqueInput {
-  createdAt: DateTime
-  id: Int
 }
