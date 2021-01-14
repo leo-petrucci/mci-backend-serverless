@@ -9,8 +9,8 @@ export const User = objectType({
     t.field('role', { type: 'String' })
     t.field('banned', { type: 'Boolean' })
     t.field('photoUrl', { type: 'Boolean' })
-    t.model.votes()
-    t.model.servers()
+    t.field('Votes', { type: 'Vote' })
+    t.field('Server', { type: 'Server' })
   },
 })
 

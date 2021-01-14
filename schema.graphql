@@ -69,7 +69,9 @@ type User {
   id: Int!
   photoUrl: Boolean
   role: String
+  Server: Server
   username: String
+  Votes: Vote
 }
 
 type UserPayload {
