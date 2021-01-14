@@ -1,46 +1,14 @@
 import { intArg, makeSchema, nonNull, objectType, stringArg } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 import path from 'path'
-import { seedUsers } from './seed'
-import * as types from './types'
-
-const Query = objectType({
-  name: 'Query',
-  definition(t) {
-    t.list.field('servers', {
-      type: 'Server',
-      resolve: (_, args, ctx) => {
-        return ctx.prisma.server.findMany()
-      },
-    })
-  },
-})
-
-const Mutation = objectType({
-  name: 'Mutation',
-  definition(t) {
-    t.field('updateTitle', {
-      type: 'Server',
-      args: {
-        id: nonNull(intArg()),
-        title: nonNull(stringArg()),
-      },
-      resolve: async (_, { title, id }, ctx) => {
-        return ctx.prisma.server.update({
-          where: { id: id },
-          data: {
-            title,
-          },
-        })
-      },
-    })
-  },
-})
+import { Mutation } from './mutation'
+import { Query } from './query'
+import * as Types from './types'
 
 const generateArtifacts = Boolean(process.env.GENERATE_ARTIFACTS)
 
 export const schema = makeSchema({
-  types: [Query, Mutation, types],
+  types: [Query, Mutation, Types],
   plugins: [
     nexusPrisma({
       experimentalCRUD: true,

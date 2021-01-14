@@ -7,11 +7,31 @@ type AuthPayload {
 }
 
 type Mutation {
-  updateTitle(id: Int!, title: String!): Server
+  addTag(id: Int!, tags: [String!]!): ServerPayload
+  createServer(content: String, cover: String, ip: String!, tags: [String!]!, title: String!): Server
+  deleteServer(id: Int!): ServerPayload
+  oAuthLogin(code: String!): AuthPayload
+  publishServer(id: Int!): ServerPayload
+  removeTag(id: Int!, tag: String!): ServerPayload
+  resetVotes(id: Int!): ServerPayload
+  updateBan(banned: Boolean!, id: Int!): UserPayload
+  updateContent(content: String!, id: Int!): ServerPayload
+  updateCover(cover: String!, id: Int!): ServerPayload
+  updateIp(id: Int!, ip: String!): ServerPayload
+  updateRemoteInfo(id: Int!, ip: String!): Server
+  updateRole(id: Int!, role: String!): UserPayload
+  updateTitle(id: Int!, title: String!): ServerPayload
+  vote(id: Int!): VoteCast
 }
 
 type Query {
-  servers: [Server]
+  allServers: [Server]
+  feed(date: String! = "2021-01-14T20:07:45.994Z", page: Int! = 0): [Server]
+  me: User
+  searchServers(date: String! = "2021-01-14T20:07:45.994Z", page: Int! = 0, searchString: String): [Server]
+  searchTags(searchString: String!): [Tag]
+  server(date: String! = "2021-01-14T20:07:45.994Z", id: Int): Server
+  users: [User]
 }
 
 type Server {
