@@ -4,9 +4,9 @@ export const User = objectType({
   name: 'User',
   definition(t) {
     t.model.id()
-    // t.model.username()
+    t.field('username', { type: 'String' })
     t.model.email()
-    // t.model.role()
+    t.field('role', { type: 'String' })
     t.model.banned()
     t.model.photoUrl()
     t.model.Votes()
