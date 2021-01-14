@@ -4,7 +4,7 @@ export const User = objectType({
   name: 'User',
   definition(t) {
     t.model.id()
-    t.model.username()
+    // t.model.username()
     t.model.email()
     t.model.role()
     t.model.banned()
