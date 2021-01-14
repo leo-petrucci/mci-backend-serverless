@@ -15,6 +15,7 @@ type Mutation {
 type Query {
   servers: [Server]
   user(where: UserWhereUniqueInput!): User
+  votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
 }
 
 type Server {
@@ -65,12 +66,13 @@ input TagWhereUniqueInput {
 }
 
 type User {
-  banned: Boolean!
+  banned: Boolean
   email: String!
   id: Int!
-  photoUrl: String!
-  role: String!
+  photoUrl: Boolean
+  role: String
   Servers(after: ServerWhereUniqueInput, before: ServerWhereUniqueInput, first: Int, last: Int): [Server!]!
+  username: String!
   Votes(after: VoteWhereUniqueInput, before: VoteWhereUniqueInput, first: Int, last: Int): [Vote!]!
 }
 
