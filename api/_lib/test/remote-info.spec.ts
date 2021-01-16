@@ -37,6 +37,8 @@ describe('Remote info ', () => {
             }
             `,
       })
+
+    console.log(res2.body.data)
     const newTime = res2.body.data.updateRemoteInfo.lastUpdated
     expect(res2).to.have.status(200)
     expect(newTime).to.be.a('string')
