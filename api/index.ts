@@ -4,7 +4,7 @@ import { createContext } from './_lib/context'
 import microCors from 'micro-cors'
 const cors = microCors({
   allowCredentials: true,
-  origin: 'http://localhost:3000',
+  origin: '*',
 })
 
 const server = new ApolloServer({
