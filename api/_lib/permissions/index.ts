@@ -38,13 +38,13 @@ const rules = {
     return userId === author.id
   }),
   fromMod: rule()(async (parent, { id }, context) => {
+    return new Error('Custom error from rule.')
     const userId = getUserId(context)
     const user = await context.prisma.user.findUnique({
       where: {
         id: Number(userId),
       },
     })
-    return new Error('Custom error from rule.')
     return user.role === 'admin' || user.role === 'mod'
   }),
   fromAdmin: rule()(async (parent, { id }, context) => {
