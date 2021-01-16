@@ -1,7 +1,7 @@
 {
   "name": "prisma-vercel-graphql",
   "scripts": {
-    "test": "node prisma/seed && mocha --exit --timeout 10000 -r dotenv/config dist/test/**/*.spec.*",
+    "test": "node prisma/seed && mocha --exit --timeout 10000 -r dotenv/config api/_lib/test/**/*.spec.*",
     "test:dev": "node prisma/seed && ts-mocha --exit --timeout 10000 -r dotenv/config api/_lib/test/**/*.spec.*",
     "start": "node dist/graphql",
     "clean": "rm -rf dist",
