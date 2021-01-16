@@ -10,5 +10,3 @@
 curl https://codeload.github.com/prisma/prisma-examples/tar.gz/latest | tar -xz --strip=2 prisma-examples-latest/deployment-platforms/vercel-graphql
 cd vercel-graphql
 ```
-
-Testing if this will break

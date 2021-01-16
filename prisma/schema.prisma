@@ -19,29 +19,41 @@ model Server {
   ip        String   @default("")
   authorId  Int
   versionId Int
+  author    User     @relation(fields: [authorId], references: [id])
+  version   Version  @relation(fields: [versionId], references: [id])
+  votes     Vote[]
+  tags      Tag[]
 }
 
 model User {
-  id      Int      @default(autoincrement()) @id
-  email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
+  id       Int      @id
+  email    String   @unique
+  username String
+  role     String
+  photoUrl String   @default("")
+  posts    Int      @default(0)
+  banned   Boolean  @default(false)
+  Servers  Server[]
+  Votes    Vote[]
 }
 
-model Post {
-  id        Int      @default(autoincrement()) @id
-  createdAt DateTime @default(now())
-  published Boolean  @default(false)
-  content   String?
-  title     String
+model Tag {
+  id      Int      @id @default(autoincrement())
+  tagName String   @unique
+  Servers Server[]
+}
+
+model Vote {
+  id        Int      @unique @default(autoincrement())
+  createdAt DateTime @id @default(now())
   authorId  Int
+  serverId  Int
   author    User     @relation(fields: [authorId], references: [id])
+  server    Server   @relation(fields: [serverId], references: [id])
 }
 
-model Profile {
-  bio    String?
-  id     Int     @default(autoincrement()) @id
-  userId Int     @unique
-  user   User    @relation(fields: [userId], references: [id])
+model Version {
+  id          Int      @id @default(autoincrement())
+  versionName String   @unique
+  Servers     Server[]
 }
