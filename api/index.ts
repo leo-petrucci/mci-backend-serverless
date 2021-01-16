@@ -15,7 +15,7 @@ const server = new ApolloServer({
 })
 
 const handler = server.createHandler({
-  path: '/',
+  path: '/api',
 })
 
 // @ts-ignore
