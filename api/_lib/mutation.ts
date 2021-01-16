@@ -153,7 +153,6 @@ export const Mutation = mutationType({
         try {
           await validationSchema.title.validate({ title })
         } catch (e) {
-          // ctx.res.status(400)
           return new Error(e.errors[0])
         }
 
@@ -177,7 +176,6 @@ export const Mutation = mutationType({
         try {
           await validationSchema.content.validate({ content })
         } catch (e) {
-          ctx.res.status(400)
           return new Error(e.errors[0])
         }
 
@@ -201,7 +199,6 @@ export const Mutation = mutationType({
         try {
           await validationSchema.tags.validate({ tags })
         } catch (e) {
-          ctx.res.status(400)
           return new Error(e.errors[0])
         }
 
@@ -244,7 +241,6 @@ export const Mutation = mutationType({
         try {
           await validationSchema.cover.validate({ cover })
         } catch (e) {
-          ctx.res.status(400)
           return new Error(e.errors[0])
         }
 
@@ -336,7 +332,6 @@ export const Mutation = mutationType({
           await validationSchema.cover.validate({ cover })
           await validationSchema.tags.validate({ tags })
         } catch (e) {
-          ctx.res.status(400)
           return new Error(e.errors[0])
         }
 
@@ -424,7 +419,7 @@ export const Mutation = mutationType({
             outcome: 'Your vote was added.',
           }
         } else {
-          ctx.res.status(401)
+          return new Error('You have already voted for this server this month.')
           return {
             outcome: 'You have already voted for this server this month.',
           }

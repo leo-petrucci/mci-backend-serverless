@@ -18,6 +18,7 @@ const handler = server.createHandler({
   path: '/api',
 })
 
+// This is important or cors will fail at preflight
 export default cors((req, res) =>
   req.method === 'OPTIONS' ? res.end() : handler(req, res),
-) // highlight-line
+)

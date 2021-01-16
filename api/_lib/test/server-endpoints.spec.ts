@@ -17,7 +17,7 @@ describe('Server Endpoints', () => {
   // SERVER AUTHORS
 
   it('non logged in users can view server authors', async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `query{ server(id: 1) { title, author { username } } }`,
     })
     expect(res).to.have.status(200)
@@ -27,7 +27,7 @@ describe('Server Endpoints', () => {
   it('logged in users can view server authors', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query{ server(id: 1) { title, author { username } } }`,
@@ -37,7 +37,7 @@ describe('Server Endpoints', () => {
   })
 
   it('non logged in users can view server authors from feed', async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `query{ feed { title, author { username } } }`,
     })
     expect(res).to.have.status(200)
@@ -47,7 +47,7 @@ describe('Server Endpoints', () => {
   it('logged in users can view server authors from feed', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query{ feed { title, author { username } } }`,
@@ -59,7 +59,7 @@ describe('Server Endpoints', () => {
   // SERVER TAGS
 
   it('non logged in users can view server tags', async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `query{ server(id: 1) { title, tags { tagName } } }`,
     })
     expect(res).to.have.status(200)
@@ -69,7 +69,7 @@ describe('Server Endpoints', () => {
   it('logged in users can view server tags', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query{ server(id: 1) { title, tags { tagName } } }`,
@@ -79,7 +79,7 @@ describe('Server Endpoints', () => {
   })
 
   it('non logged in users can view server authors from feed', async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `query{ feed { title, tags { tagName } } }`,
     })
     expect(res).to.have.status(200)
@@ -89,7 +89,7 @@ describe('Server Endpoints', () => {
   it('logged in users can view server authors from feed', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query{ feed { title, tags { tagName } } }`,
@@ -101,14 +101,13 @@ describe('Server Endpoints', () => {
   // VOTE TESTS
 
   it("non logged in users can't vote", async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `mutation{ vote(id: 1) { outcome } }`,
     })
-    expect(res).to.have.status(401)
     expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it('non-logged in users view server with canVote false', async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `query { server (id: 1) { canVote } }`,
     })
     expect(res).to.have.status(200)
@@ -117,7 +116,7 @@ describe('Server Endpoints', () => {
   it('logged in users can view server with canVote key', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query { server (id: 1) { canVote } }`,
@@ -128,7 +127,7 @@ describe('Server Endpoints', () => {
   it('logged in users can vote', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{ vote(id: 1) { outcome } }`,
@@ -138,7 +137,7 @@ describe('Server Endpoints', () => {
   it('canvote is false after voting', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query { server (id: 1) { canVote } }`,
@@ -149,35 +148,38 @@ describe('Server Endpoints', () => {
   it("logged in users can't vote twice for the same server", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{ vote(id: 1) { outcome } }`,
       })
-    expect(res).to.have.status(401)
+    expect(res.body.errors).to.be.an('array')
+    expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it("logged in users can't vote twice for the same server in a short amount of time", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{ vote(id: 2) { outcome } }`,
       })
     const res2 = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{ vote(id: 2) { outcome } }`,
       })
     expect(res).to.have.status(200)
-    expect(res2).to.have.status(401)
+
+    expect(res2.body.errors).to.be.an('array')
+    expect(res2.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it('admins can reset votes', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation {
@@ -189,7 +191,7 @@ describe('Server Endpoints', () => {
       })
     const res2 = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation {
@@ -205,7 +207,7 @@ describe('Server Endpoints', () => {
   it('tag search query works', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query { searchTags (searchString: "") { id } }`,
@@ -217,7 +219,7 @@ describe('Server Endpoints', () => {
   it('tag search query works with search string', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query { searchTags (searchString: "test") { id } }`,

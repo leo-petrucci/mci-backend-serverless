@@ -17,7 +17,7 @@ describe('Server mutations', () => {
   it('users can post servers', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `
@@ -34,7 +34,7 @@ describe('Server mutations', () => {
   it("banned users can't post servers", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.BANNED_TOKEN)
       .send({
         query: `
@@ -45,12 +45,14 @@ describe('Server mutations', () => {
           }
           `,
       })
-    expect(res).to.have.status(401)
+
+    expect(res.body.errors).to.be.an('array')
+    expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it("user can't edit servers it doesn't own", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('token', process.env.USER_TOKEN)
       .send({
         query: `
@@ -61,14 +63,13 @@ describe('Server mutations', () => {
           }
         `,
       })
-    expect(res).to.have.status(401)
     expect(res.body.errors).to.be.an('array')
     expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it("banned user can't edit servers it owns", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('token', process.env.BANNED_TOKEN)
       .send({
         query: `
@@ -79,14 +80,13 @@ describe('Server mutations', () => {
           }
         `,
       })
-    expect(res).to.have.status(401)
     expect(res.body.errors).to.be.an('array')
     expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it('Can create server with new version', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `
@@ -105,7 +105,7 @@ describe('Server mutations', () => {
   it('Can create server with new tags', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `

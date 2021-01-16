@@ -19,11 +19,8 @@ export function getUserId(context: Context, bypassError: boolean = false) {
       const verifiedToken = verify(token, APP_SECRET) as Token
       return verifiedToken && verifiedToken.userId
     } catch (error) {
-      context.res.status(401)
       throw new Error('Could not authenticate user.')
     }
-  } else {
-    if (!bypassError) context.res.status(401)
   }
 }
 
@@ -33,7 +30,6 @@ export async function getServerInfo(
 ): Promise<{ online: boolean; version: string; players: { max: number } }> {
   const { data } = await axios.get(`https://api.mcsrvstat.us/2/${Ip}`)
   if (!data.online) {
-    context.res.status(401)
     throw new Error('Could not fetch server.')
   }
   return data
@@ -68,7 +64,6 @@ export async function getMciToken(
     .then((res) => res.data)
     .catch((error) => error.response.data)
   if (!data.access_token) {
-    context.res.status(401)
     throw new Error(
       `There was a problem fetching your token. ${data.error} - ${data.error_description}`,
     )

@@ -15,18 +15,19 @@ before(async () => {
 
 describe('Remote info ', () => {
   it('lastUpdated changes when updating remote info', async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `query {
           server (id: 1) {
               lastUpdated
           }
       }`,
     })
+    console.log(res.body.data)
     const oldTime = res.body.data.server.lastUpdated
 
     const res2 = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation {
@@ -44,7 +45,7 @@ describe('Remote info ', () => {
   it("mods can update info of servers they don't own", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.MOD_TOKEN)
       .send({
         query: `mutation {
@@ -60,7 +61,7 @@ describe('Remote info ', () => {
   it("users can't update info of servers they don't own", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation {
@@ -70,12 +71,13 @@ describe('Remote info ', () => {
             }
             `,
       })
-    expect(res).to.have.status(401)
+    expect(res.body.errors).to.be.an('array')
+    expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it('users can update info of servers they own', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation {
@@ -90,7 +92,7 @@ describe('Remote info ', () => {
   it("banned users can't update info of servers they own", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.BANNED_TOKEN)
       .send({
         query: `mutation {
@@ -100,6 +102,7 @@ describe('Remote info ', () => {
             }
             `,
       })
-    expect(res).to.have.status(401)
+    expect(res.body.errors).to.be.an('array')
+    expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
 })

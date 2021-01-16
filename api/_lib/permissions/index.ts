@@ -10,7 +10,7 @@ const rules = {
       },
     })
     if (user.banned) {
-      return new Error('Custom error from rule.')
+      return new Error('This account is banned.')
     }
     return Boolean(userId) && !user.banned
   }),
@@ -38,7 +38,6 @@ const rules = {
     return userId === author.id
   }),
   fromMod: rule()(async (parent, { id }, context) => {
-    return new Error('Custom error from rule.')
     const userId = getUserId(context)
     const user = await context.prisma.user.findUnique({
       where: {

@@ -17,7 +17,7 @@ describe('Permissions', () => {
   it("user can't change roles", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation { updateRole(id: 65157, role: "mod") { user { role } } }`,
@@ -28,7 +28,7 @@ describe('Permissions', () => {
   it("user can't ban", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{
@@ -46,7 +46,7 @@ describe('Permissions', () => {
   it("user can't view list of users", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({ query: '{ users { username }}' })
     expect(res.body.errors).to.be.an('array')
@@ -55,17 +55,18 @@ describe('Permissions', () => {
   it("users can't reset votes", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `mutation { resetVotes(id: 1") { title }`,
       })
-    expect(res).to.have.status(400)
+    expect(res.body.errors).to.be.an('array')
+    expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it('admin can set users to mods', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation { updateRole(id: 65157, role: "mod") { user { role } } }`,
@@ -77,7 +78,7 @@ describe('Permissions', () => {
   it("mods can't change roles", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.MOD_TOKEN)
       .send({
         query: `mutation { updateRole(id: 9999, role: "admin") { user { role } } }`,
@@ -88,7 +89,7 @@ describe('Permissions', () => {
   it('mods can ban users', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.MOD_TOKEN)
       .send({
         query: `mutation{
@@ -105,7 +106,7 @@ describe('Permissions', () => {
   it('mods can unban users', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.MOD_TOKEN)
       .send({
         query: `mutation{
@@ -122,7 +123,7 @@ describe('Permissions', () => {
   it("mods can't ban mods", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.MOD_TOKEN)
       .send({
         query: `mutation{
@@ -139,7 +140,7 @@ describe('Permissions', () => {
   it("mods can't ban admins", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.MOD_TOKEN)
       .send({
         query: `mutation{
@@ -156,17 +157,18 @@ describe('Permissions', () => {
   it("mods can't reset votes", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.MOD_TOKEN)
       .send({
         query: `mutation { resetVotes(id: 1") { title }`,
       })
-    expect(res).to.have.status(400)
+    expect(res.body.errors).to.be.an('array')
+    expect(res.body.errors[0].message).to.be.a('string', 'Not Authorised!')
   })
   it("mods can edit servers they don't own", async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.MOD_TOKEN)
       .send({
         query: `
@@ -187,7 +189,7 @@ describe('Permissions', () => {
   it('admin can set mods to users', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation { updateRole(id: 65157, role: "user") { user { role } } }`,

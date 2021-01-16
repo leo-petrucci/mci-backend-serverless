@@ -17,7 +17,7 @@ describe('Tag Endpoints', () => {
   // SERVER TAGS
 
   it('non logged in users can view server tags', async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `query{ server(id: 1) { title, tags { tagName } } }`,
     })
     expect(res).to.have.status(200)
@@ -27,7 +27,7 @@ describe('Tag Endpoints', () => {
   it('logged in users can view server tags', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query{ server(id: 1) { title, tags { tagName } } }`,
@@ -37,7 +37,7 @@ describe('Tag Endpoints', () => {
   })
 
   it('non logged in users can view server authors from feed', async () => {
-    const res = await chai.request(app).post('/').send({
+    const res = await chai.request(app).post('/api').send({
       query: `query{ feed { title, tags { tagName } } }`,
     })
     expect(res).to.have.status(200)
@@ -47,7 +47,7 @@ describe('Tag Endpoints', () => {
   it('logged in users can view server authors from feed', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query{ feed { title, tags { tagName } } }`,
@@ -58,7 +58,7 @@ describe('Tag Endpoints', () => {
   it('tag search query works', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query { searchTags (searchString: "") { id } }`,
@@ -70,7 +70,7 @@ describe('Tag Endpoints', () => {
   it('tag search query works with search string', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.USER_TOKEN)
       .send({
         query: `query { searchTags (searchString: "test") { id } }`,

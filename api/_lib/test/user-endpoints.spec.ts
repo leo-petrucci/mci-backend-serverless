@@ -17,7 +17,7 @@ describe('User Endpoints', () => {
   it('fetches logged in user profile', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
       .send({ query: '{ me { username }}' })
     expect(res).to.have.status(200)
@@ -26,7 +26,7 @@ describe('User Endpoints', () => {
   it('fetches list of users', async () => {
     const res = await chai
       .request(app)
-      .post('/')
+      .post('/api')
       .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
       .send({ query: '{ users { username }}' })
     expect(res).to.have.status(200)
