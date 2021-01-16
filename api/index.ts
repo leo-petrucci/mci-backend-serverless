@@ -18,8 +18,6 @@ const handler = server.createHandler({
   path: '/api',
 })
 
-// @ts-ignore
-export default cors((req, res) => {
-  console.log(res.statusCode)
-  return handler(req, res)
-}) // highlight-line
+export default cors((req, res) =>
+  req.method === 'OPTIONS' ? res.end() : handler(req, res),
+) // highlight-line
