@@ -12,6 +12,7 @@ type Mutation {
   deleteServer(id: Int!): ServerPayload
   oAuthLogin(code: String!): AuthPayload
   publishServer(id: Int!): ServerPayload
+  refresh: AuthPayload
   removeTag(id: Int!, tag: String!): ServerPayload
   resetVotes(id: Int!): ServerPayload
   updateBan(banned: Boolean!, id: Int!): UserPayload
@@ -26,11 +27,11 @@ type Mutation {
 
 type Query {
   allServers: [Server]
-  feed(date: String! = "2021-01-16T20:19:33.437Z", page: Int! = 0): [Server]
+  feed(date: String! = "2021-01-16T23:32:54.078Z", page: Int! = 0): [Server]
   me: User
-  searchServers(date: String! = "2021-01-16T20:19:33.437Z", page: Int! = 0, searchString: String): [Server]
+  searchServers(date: String! = "2021-01-16T23:32:54.078Z", page: Int! = 0, searchString: String): [Server]
   searchTags(searchString: String!): [Tag]
-  server(date: String! = "2021-01-16T20:19:33.437Z", id: Int): Server
+  server(date: String! = "2021-01-16T23:32:54.078Z", id: Int): Server
   users: [User]
 }
 

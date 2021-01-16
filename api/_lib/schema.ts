@@ -41,5 +41,5 @@ export const schema = applyMiddleware(
       ],
     },
   }),
-  permissions,
+  // permissions,
 )

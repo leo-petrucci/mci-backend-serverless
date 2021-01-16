@@ -17,8 +17,10 @@ import {
   getVersionQuery,
   getTagsQuery,
   getMciToken,
+  issueTokens,
   getMciProfile,
   getDates,
+  verifyRefreshToken,
 } from './utils'
 import { MaybePromise } from 'nexus/dist/core'
 let cookie = require('cookie')
@@ -54,7 +56,7 @@ export const Mutation = mutationType({
       args: {
         code: nonNull(stringArg()),
       },
-      resolve: async (_parent, { code }, ctx) => {
+      resolve: async (_parent, { code }, ctx): Promise<any> => {
         let token
         try {
           token = await getMciToken(code, ctx)
@@ -86,18 +88,33 @@ export const Mutation = mutationType({
           },
         })
 
-        const securedToken = sign(
-          { userId: user.id, role: user.role },
-          APP_SECRET,
-          {
-            expiresIn: '7d',
-          },
-        )
+        await issueTokens(ctx, user)
 
-        ctx.res.cookie('token', securedToken, {
-          expires: new Date(Date.now() + 900000 * 4 * 24 * 7),
-          httpOnly: true,
+        return {
+          user,
+        }
+      },
+    })
+
+    t.field('refresh', {
+      type: 'AuthPayload',
+      resolve: async (_parent, { code }, ctx): Promise<any> => {
+        let userId
+        try {
+          userId = verifyRefreshToken(ctx)
+        } catch (err) {
+          return new Error(err)
+        }
+
+        const user = await ctx.prisma.user.findUnique({
+          where: { id: Number(userId) },
         })
+
+        if (user) {
+          await issueTokens(ctx, user)
+        } else {
+          return new Error('Could not refresh token.')
+        }
 
         return {
           user,
