@@ -1,5 +1,4 @@
 import { rule, shield, and, or, not } from 'graphql-shield'
-import { createError, send } from 'micro'
 import { getUserId } from '../utils'
 
 const rules = {
@@ -11,38 +10,32 @@ const rules = {
       },
     })
     if (user.banned) {
-      context.res.status(401)
+      return new Error('Custom error from rule.')
     }
     return Boolean(userId) && !user.banned
   }),
   isServerOwner: rule()(async (parent, { id }, context) => {
-    // const userId = getUserId(context)
-    // const author = await context.prisma.server
-    //   .findUnique({
-    //     where: {
-    //       id: Number(id),
-    //     },
-    //   })
-    //   .author()
-    // if (userId !== author.id) {
-    //   const user = await context.prisma.user.findUnique({
-    //     where: {
-    //       id: Number(userId),
-    //     },
-    //   })
-    //   if (user.role === 'admin' || user.role === 'mod') {
-    //   } else {
-    //     context.res.statusCode = 500
-    //     context.res.end()
-    //     // context.res.setHeaders(401)
-    //   }
-    // }
-    // context.res.statusCode = 500
-    // context.res.end()
-    return new Error('Custom error message from resolver.')
-    // send(context.res, 500)
-    // throw createError(500, 'Fuck')
-    return false
+    const userId = getUserId(context)
+    const author = await context.prisma.server
+      .findUnique({
+        where: {
+          id: Number(id),
+        },
+      })
+      .author()
+    if (userId !== author.id) {
+      const user = await context.prisma.user.findUnique({
+        where: {
+          id: Number(userId),
+        },
+      })
+      if (user.role === 'admin' || user.role === 'mod') {
+      } else {
+        // context.res.statusCode = 401
+        // context.res.setHeaders(401)
+      }
+    }
+    return userId === author.id
   }),
   fromMod: rule()(async (parent, { id }, context) => {
     const userId = getUserId(context)
@@ -51,6 +44,7 @@ const rules = {
         id: Number(userId),
       },
     })
+    return new Error('Custom error from rule.')
     return user.role === 'admin' || user.role === 'mod'
   }),
   fromAdmin: rule()(async (parent, { id }, context) => {
