@@ -92,15 +92,13 @@ describe('Server mutations', () => {
         query: `
           mutation {
             createServer(title: "test server 3", content: "A description of the server that contains at least 200 characters, I do realise that is quite a lot but we might as well ask for a decent description rather than leaving it being shit. This is still not enough which is honestly quite surprising as I really did think it was going to be 200 characters", cover: "https://via.placeholder.com/350x150.jpg", tags: ["test", "test2"], ip: "server.mcs.gg") {
-              version {
-                versionName
-              }
+              title
             }
           }        
         `,
       })
     expect(res).to.have.status(200)
-    expect(res.body.data.createServer.version.versionName).to.be.a('string')
+    expect(res.body.data.createServer.title).to.be.a('string')
   })
   it('Can create server with new tags', async () => {
     const res = await chai
@@ -111,21 +109,12 @@ describe('Server mutations', () => {
         query: `
           mutation {
             createServer(title: "test server 3", content: "A description of the server that contains at least 200 characters, I do realise that is quite a lot but we might as well ask for a decent description rather than leaving it being shit. This is still not enough which is honestly quite surprising as I really did think it was going to be 200 characters", cover: "https://via.placeholder.com/350x150.jpg", tags: ["a new tag", "something else here"], ip: "server.mcs.gg") {
-              tags {
-                tagName
-              }
+              title
             }
           }        
         `,
       })
     expect(res).to.have.status(200)
-    expect(res.body.data.createServer.tags).to.have.deep.members([
-      {
-        tagName: 'a new tag',
-      },
-      {
-        tagName: 'something else here',
-      },
-    ])
+    expect(res.body.data.createServer.title).to.be.a('string')
   })
 })

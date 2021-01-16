@@ -2,9 +2,12 @@ import { ApolloServer } from 'apollo-server-micro'
 import { schema } from './_lib/schema'
 import { createContext } from './_lib/context'
 import microCors from 'micro-cors'
+
+export const ALLOWED_ORIGIN: string = process.env.ALLOWED_ORIGIN!
+
 const cors = microCors({
   allowCredentials: true,
-  origin: '*',
+  origin: ALLOWED_ORIGIN,
 })
 
 const server = new ApolloServer({

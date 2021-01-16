@@ -337,11 +337,11 @@ export const Mutation = mutationType({
 
         const tagObjects = await getTagsQuery(ctx, tags)
 
-        if (!userId) throw new Error('Could not authenticate user.')
+        if (!userId) return new Error('Could not authenticate user.')
 
         // Fetch server info
         let serverInfo = await getServerInfo(ip, ctx)
-        if (!serverInfo.online) throw new Error('Could not find server info.')
+        if (!serverInfo.online) return new Error('Could not find server info.')
 
         // return create or connect version
         const versionQuery = await getVersionQuery(ctx, serverInfo.version)

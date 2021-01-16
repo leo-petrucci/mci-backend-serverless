@@ -208,7 +208,6 @@ export const Query = queryType({
         } catch (error) {}
 
         let servers
-        console.log(d, f)
 
         servers = await ctx.prisma.$queryRaw`
             SELECT 
