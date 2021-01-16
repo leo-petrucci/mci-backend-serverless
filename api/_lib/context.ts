@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { IncomingMessage, ServerResponse } from 'http'
 
 const prisma = new PrismaClient({
   // Uncomment for debugging purposes
@@ -12,10 +13,10 @@ export interface Context {
 }
 
 // @ts-ignore
-export function createContext({ request, response, ...rest }: Context) {
+export function createContext({ req, res, ...rest }: Context) {
   return {
-    req: request,
-    res: response,
+    req,
+    res,
     prisma,
   }
 }

@@ -1,38 +1,45 @@
 import { intArg, makeSchema, nonNull, objectType, stringArg } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
+import { rule, shield } from 'graphql-shield'
 import path from 'path'
+import { applyMiddleware } from 'graphql-middleware'
 import { Mutation } from './mutation'
 import { Query } from './query'
 import * as Types from './types'
+import { getUserId } from './utils'
+import { permissions } from './permissions'
 
 const generateArtifacts = Boolean(process.env.GENERATE_ARTIFACTS)
 
-export const schema = makeSchema({
-  types: [Query, Mutation, Types],
-  plugins: [
-    nexusPrisma({
-      experimentalCRUD: true,
-      shouldGenerateArtifacts: generateArtifacts,
-      outputs: {
-        typegen: path.join(__dirname, '/generated/prisma-nexus.ts'),
-      },
-    }),
-  ],
-  shouldGenerateArtifacts: generateArtifacts,
-  outputs: {
-    schema: path.join(__dirname, '/../../schema.graphql'),
-    typegen: path.join(__dirname, '/generated/nexus.ts'),
-  },
-  contextType: {
-    module: require.resolve('./context'),
-    export: 'Context',
-  },
-  sourceTypes: {
-    modules: [
-      {
-        module: '@prisma/client',
-        alias: 'prisma',
-      },
+export const schema = applyMiddleware(
+  makeSchema({
+    types: [Query, Mutation, Types],
+    plugins: [
+      nexusPrisma({
+        experimentalCRUD: true,
+        shouldGenerateArtifacts: generateArtifacts,
+        outputs: {
+          typegen: path.join(__dirname, '/generated/prisma-nexus.ts'),
+        },
+      }),
     ],
-  },
-})
+    shouldGenerateArtifacts: generateArtifacts,
+    outputs: {
+      schema: path.join(__dirname, '/../../schema.graphql'),
+      typegen: path.join(__dirname, '/generated/nexus.ts'),
+    },
+    contextType: {
+      module: require.resolve('./context'),
+      export: 'Context',
+    },
+    sourceTypes: {
+      modules: [
+        {
+          module: '@prisma/client',
+          alias: 'prisma',
+        },
+      ],
+    },
+  }),
+  permissions,
+)

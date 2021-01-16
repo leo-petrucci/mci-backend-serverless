@@ -26,24 +26,26 @@ type Mutation {
 
 type Query {
   allServers: [Server]
-  feed(date: String! = "2021-01-14T20:07:45.994Z", page: Int! = 0): [Server]
+  feed(date: String! = "2021-01-16T15:50:05.168Z", page: Int! = 0): [Server]
   me: User
-  searchServers(date: String! = "2021-01-14T20:07:45.994Z", page: Int! = 0, searchString: String): [Server]
+  searchServers(date: String! = "2021-01-16T15:50:05.168Z", page: Int! = 0, searchString: String): [Server]
   searchTags(searchString: String!): [Tag]
-  server(date: String! = "2021-01-14T20:07:45.994Z", id: Int): Server
+  server(date: String! = "2021-01-16T15:50:05.168Z", id: Int): Server
   users: [User]
 }
 
 type Server {
-  author: Int
+  author: User
   canVote: Boolean
   content: String
   cover: String
   createdAt: String
   id: Int
+  ip: String
+  lastUpdated: String
   published: Boolean
   slots: Int
-  tags: Tag
+  tags: [Tag]
   title: String
   version: Version
   voteCount: Int
@@ -74,9 +76,9 @@ type User {
   banned: Boolean
   email: String
   id: Int
-  photoUrl: Boolean
+  photoUrl: String
   role: String
-  Server: Server
+  Servers: Server
   username: String
   Votes: Vote
 }

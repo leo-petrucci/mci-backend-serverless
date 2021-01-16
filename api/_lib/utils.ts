@@ -12,8 +12,8 @@ interface Token {
 }
 
 export function getUserId(context: Context, bypassError: boolean = false) {
-  if (context.req.header('Cookie')) {
-    const Authorization = cookie.parse(context.req.header('Cookie'))
+  if (context.req.headers['cookie']) {
+    const Authorization = cookie.parse(context.req.headers['cookie'])
     const { token } = Authorization
     try {
       const verifiedToken = verify(token, APP_SECRET) as Token

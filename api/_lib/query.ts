@@ -35,7 +35,7 @@ export const Query = queryType({
         date: nonNull(stringArg({ default: new Date().toISOString() })),
         page: nonNull(intArg({ default: 0 })),
       },
-      resolve: (parent, { date, page }, ctx) => {
+      resolve: async (parent, { date, page }, ctx) => {
         const pageLimit = 10
         const [d, f] = getDates(date)
 
@@ -55,11 +55,12 @@ export const Query = queryType({
                 ,   s.cover
                 ,   s.slots
                 ,   s."createdAt"
-                ,   a."authorObj"::jsonb
+                ,   a."author"::jsonb
+                ,   ver."version"::jsonb
                 ,   COALESCE(v."VOTES", 0) AS "voteCount" 
                 ,   CASE WHEN uv."serverId" IS NULL THEN 1 ELSE 0 END AS
                 "canVote"
-                ,   tag."tagsArray"::jsonb
+                ,   tag."tags"::jsonb
                 FROM "Server" AS s
                     -- Get tags
                     INNER JOIN
@@ -73,7 +74,7 @@ export const Query = queryType({
                                     'tagName', 
                                     t."tagName"
                                 )
-                            ) as "tagsArray"
+                            ) as "tags"
                         FROM
                             "_ServerToTag" AS st
                         INNER JOIN
@@ -85,6 +86,20 @@ export const Query = queryType({
                     ) AS tag
                     ON
                         tag."A" = s.id
+                    -- Build the version objects
+                    INNER JOIN
+                    (
+                        SELECT
+                            id
+                        ,   json_build_object(
+                                'id', v.id,
+                                'versionName', v."versionName"
+                            ) AS "version"
+                        FROM
+                            "Version" as v
+                    ) AS ver
+                    ON
+                        ver.id = s."versionId"
                     -- Build the author objects
                     INNER JOIN
                     (
@@ -94,7 +109,7 @@ export const Query = queryType({
                                 'username', u.username,
                                 'id', u.id,
                                 'photoUrl', u."photoUrl"
-                            ) AS "authorObj"
+                            ) AS "author"
                         FROM
                             "User" as u
                     ) AS a
@@ -135,9 +150,8 @@ export const Query = queryType({
                 OFFSET ${page > 10 ? pageLimit * 25 : page} LIMIT 25;
             `
         } else {
-          ctx.res.status(200)
           return ctx.prisma.$queryRaw`
-                SELECT 
+                    SELECT DISTINCT
                     s.id
                 ,   s.title
                 ,   s.content
@@ -146,10 +160,11 @@ export const Query = queryType({
                 ,   s.cover
                 ,   s.slots
                 ,   s."createdAt"
-                ,   a."authorObj"::jsonb
+                ,   a."author"::jsonb
+                ,   ver."version"::jsonb
                 ,   COALESCE(v."VOTES", 0) AS "voteCount" 
-                ,   0 AS "canVote"
-                ,   tag."tagsArray"::jsonb
+                ,    0 as "canVote"
+                ,   tag."tags"::jsonb
                 FROM "Server" AS s
                     -- Get tags
                     INNER JOIN
@@ -163,7 +178,7 @@ export const Query = queryType({
                                     'tagName', 
                                     t."tagName"
                                 )
-                            ) as "tagsArray"
+                            ) as "tags"
                         FROM
                             "_ServerToTag" AS st
                         INNER JOIN
@@ -175,6 +190,20 @@ export const Query = queryType({
                     ) AS tag
                     ON
                         tag."A" = s.id
+                    -- Build the version objects
+                    INNER JOIN
+                    (
+                        SELECT
+                            id
+                        ,   json_build_object(
+                                'id', v.id,
+                                'versionName', v."versionName"
+                            ) AS "version"
+                        FROM
+                            "Version" as v
+                    ) AS ver
+                    ON
+                        ver.id = s."versionId"
                     -- Build the author objects
                     INNER JOIN
                     (
@@ -184,7 +213,7 @@ export const Query = queryType({
                                 'username', u.username,
                                 'id', u.id,
                                 'photoUrl', u."photoUrl"
-                            ) AS "authorObj"
+                            ) AS "author"
                         FROM
                             "User" as u
                     ) AS a
@@ -206,8 +235,8 @@ export const Query = queryType({
                         s.id = v."serverId"
                 ORDER BY
                     "voteCount" DESC, s."lastUpdated" DESC
-                OFFSET ${page > 10 ? pageLimit * 25 : page} LIMIT 25;
-            `
+                OFFSET ${page > 10 ? pageLimit * 25 : page} LIMIT 25;      
+          `
         }
       },
     })
@@ -258,7 +287,8 @@ export const Query = queryType({
         try {
           userId = getUserId(ctx, true)
         } catch (error) {
-          ctx.res.status(200)
+          // TODO: Fix status
+          //   ctx.res.status(200)
         }
 
         let servers

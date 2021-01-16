@@ -153,7 +153,7 @@ export const Mutation = mutationType({
         try {
           await validationSchema.title.validate({ title })
         } catch (e) {
-          ctx.res.status(400)
+          // ctx.res.status(400)
           return new Error(e.errors[0])
         }
 
