@@ -1,5 +1,13 @@
 import { objectType } from 'nexus'
 
+export const Status = objectType({
+  name: 'Status',
+  definition(t) {
+    t.field('online', { type: 'Boolean' })
+    t.field('db', { type: 'String' })
+    t.field('origins', { type: 'String' })
+  },
+})
 export const User = objectType({
   name: 'User',
   definition(t) {

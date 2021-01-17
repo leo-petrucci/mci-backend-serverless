@@ -4,6 +4,17 @@ import { getDates, getUserId } from './utils'
 
 export const Query = queryType({
   definition(t) {
+    t.field('status', {
+      type: 'Status',
+      resolve: async (parent, args, ctx): Promise<any> => {
+        return {
+          online: true,
+          db: process.env.DATABASE_URL,
+          origin: process.env.ALLOWED_ORIGIN,
+        }
+      },
+    })
+
     t.field('me', {
       type: 'User',
       resolve: (parent, args, ctx): Promise<any> => {
