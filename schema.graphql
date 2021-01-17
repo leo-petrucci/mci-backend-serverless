@@ -7,31 +7,31 @@ type AuthPayload {
 }
 
 type Mutation {
-  addTag(id: Int!, tags: [String!]!): ServerPayload
+  addTag(id: Int!, tags: [String!]!): Server
   createServer(content: String, cover: String, ip: String!, tags: [String!]!, title: String!): Server
-  deleteServer(id: Int!): ServerPayload
+  deleteServer(id: Int!): Server
   oAuthLogin(code: String!): AuthPayload
-  publishServer(id: Int!): ServerPayload
+  publishServer(id: Int!): Server
   refresh: AuthPayload
-  removeTag(id: Int!, tag: String!): ServerPayload
-  resetVotes(id: Int!): ServerPayload
+  removeTag(id: Int!, tag: String!): Server
+  resetVotes(id: Int!): Server
   updateBan(banned: Boolean!, id: Int!): UserPayload
-  updateContent(content: String!, id: Int!): ServerPayload
-  updateCover(cover: String!, id: Int!): ServerPayload
-  updateIp(id: Int!, ip: String!): ServerPayload
+  updateContent(content: String!, id: Int!): Server
+  updateCover(cover: String!, id: Int!): Server
+  updateIp(id: Int!, ip: String!): Server
   updateRemoteInfo(id: Int!, ip: String!): Server
   updateRole(id: Int!, role: String!): UserPayload
-  updateTitle(id: Int!, title: String!): ServerPayload
+  updateTitle(id: Int!, title: String!): Server
   vote(id: Int!): VoteCast
 }
 
 type Query {
   allServers: [Server]
-  feed(date: String! = "2021-01-17T00:09:33.763Z", page: Int! = 0): [Server]
+  feed(date: String! = "2021-01-17T16:57:51.975Z", page: Int! = 0): [Server]
   me: User
-  searchServers(date: String! = "2021-01-17T00:09:33.763Z", page: Int! = 0, searchString: String): [Server]
+  searchServers(date: String! = "2021-01-17T16:57:51.975Z", page: Int! = 0, searchString: String): [Server]
   searchTags(searchString: String!): [Tag]
-  server(date: String! = "2021-01-17T00:09:33.763Z", id: Int): Server
+  server(date: String! = "2021-01-17T16:57:51.975Z", id: Int): Server
   users: [User]
 }
 
@@ -40,10 +40,8 @@ type Server {
   canVote: Boolean
   content: String
   cover: String
-  createdAt: String
   id: Int
   ip: String
-  lastUpdated: String
   published: Boolean
   slots: Int
   tags: [Tag]
@@ -51,19 +49,6 @@ type Server {
   version: Version
   voteCount: Int
   votes: Vote
-}
-
-type ServerPayload {
-  author: Int
-  content: String
-  cover: String
-  createdAt: String
-  id: Int
-  published: Boolean
-  slots: Int
-  tags: Tag
-  title: String
-  version: Version
 }
 
 type Tag {
