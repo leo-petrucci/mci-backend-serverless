@@ -59,5 +59,3 @@ This will return a response like:
 ```
 
 The access token is used to request information from the api, which we will just do once
-
-bruteforcing change
