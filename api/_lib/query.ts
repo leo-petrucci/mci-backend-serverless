@@ -7,7 +7,7 @@ export const Query = queryType({
     t.field('status', {
       type: 'Status',
       resolve: async (parent, args, ctx): Promise<any> => {
-        const test = await ctx.prisma.user.findUnique({
+        const test = ctx.prisma.user.findUnique({
           where: {
             id: 6667,
           },
