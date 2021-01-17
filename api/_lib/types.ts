@@ -5,7 +5,8 @@ export const Status = objectType({
   definition(t) {
     t.field('online', { type: 'Boolean' })
     t.field('db', { type: 'String' })
-    t.field('origins', { type: 'String' })
+    t.field('origin', { type: 'String' })
+    t.field('test', { type: 'String' })
   },
 })
 export const User = objectType({
