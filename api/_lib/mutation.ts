@@ -161,7 +161,7 @@ export const Mutation = mutationType({
     })
 
     t.field('updateTitle', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: {
         id: nonNull(intArg()),
         title: nonNull(stringArg()),
@@ -184,7 +184,7 @@ export const Mutation = mutationType({
     })
 
     t.field('updateContent', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: {
         id: nonNull(intArg()),
         content: nonNull(stringArg()),
@@ -207,7 +207,7 @@ export const Mutation = mutationType({
     })
 
     t.field('addTag', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: {
         id: nonNull(intArg()),
         tags: nonNull(list(nonNull('String'))),
@@ -232,7 +232,7 @@ export const Mutation = mutationType({
     })
 
     t.field('removeTag', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: {
         id: nonNull(intArg()),
         tag: nonNull(stringArg()),
@@ -249,7 +249,7 @@ export const Mutation = mutationType({
     })
 
     t.field('updateCover', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: {
         id: nonNull(intArg()),
         cover: nonNull(stringArg()),
@@ -272,7 +272,7 @@ export const Mutation = mutationType({
     })
 
     t.field('updateIp', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: {
         id: nonNull(intArg()),
         ip: nonNull(stringArg()),
@@ -380,7 +380,7 @@ export const Mutation = mutationType({
     })
 
     t.field('deleteServer', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: { id: nonNull(intArg()) },
       resolve: async (parent, { id }, ctx): Promise<any> => {
         const server = ctx.prisma.server.update({
@@ -396,7 +396,7 @@ export const Mutation = mutationType({
     })
 
     t.field('publishServer', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: { id: nonNull(intArg()) },
       resolve: async (parent, { id }, ctx): Promise<any> => {
         const server = ctx.prisma.server.update({
@@ -445,7 +445,7 @@ export const Mutation = mutationType({
     })
 
     t.field('resetVotes', {
-      type: 'ServerPayload',
+      type: 'Server',
       args: { id: nonNull(intArg()) },
       resolve: async (parent, { id }, ctx): Promise<any> => {
         const vote = await ctx.prisma.vote.deleteMany({

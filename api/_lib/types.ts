@@ -57,29 +57,13 @@ export const VoteCast = objectType({
   },
 })
 
-export const ServerPayload = objectType({
-  name: 'ServerPayload',
-  definition(t) {
-    t.field('id', { type: 'Int' })
-    t.field('published', { type: 'Boolean' })
-    t.field('createdAt', { type: 'String' })
-    t.field('title', { type: 'String' })
-    t.field('content', { type: 'String' })
-    t.field('author', { type: 'Int' })
-    t.field('tags', { type: 'Tag' })
-    t.field('version', { type: 'Version' })
-    t.field('slots', { type: 'Int' })
-    t.field('cover', { type: 'String' })
-  },
-})
-
 export const Server = objectType({
   name: 'Server',
   definition(t) {
     t.field('id', { type: 'Int' })
     t.field('published', { type: 'Boolean' })
-    t.field('createdAt', { type: 'String' })
-    t.field('lastUpdated', { type: 'String' })
+    // t.field('createdAt', { type: 'String' })
+    // t.field('lastUpdated', { type: 'String' })
     t.field('title', { type: 'String' })
     t.field('ip', { type: 'String' })
     t.field('content', { type: 'String' })
