@@ -98,7 +98,7 @@ export const Mutation = mutationType({
 
     t.field('refresh', {
       type: 'AuthPayload',
-      resolve: async (_parent, { code }, ctx): Promise<any> => {
+      resolve: async (_parent, args, ctx): Promise<any> => {
         let userId
         try {
           userId = verifyRefreshToken(ctx)
