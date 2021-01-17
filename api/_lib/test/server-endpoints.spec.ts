@@ -28,7 +28,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query{ server(id: 1) { title, author { username } } }`,
       })
@@ -48,7 +48,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query{ feed { title, author { username } } }`,
       })
@@ -70,7 +70,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query{ server(id: 1) { title, tags { tagName } } }`,
       })
@@ -90,7 +90,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query{ feed { title, tags { tagName } } }`,
       })
@@ -117,7 +117,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query { server (id: 1) { canVote } }`,
       })
@@ -128,7 +128,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{ vote(id: 1) { outcome } }`,
       })
@@ -138,7 +138,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query { server (id: 1) { canVote } }`,
       })
@@ -149,7 +149,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{ vote(id: 1) { outcome } }`,
       })
@@ -160,14 +160,14 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{ vote(id: 2) { outcome } }`,
       })
     const res2 = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `mutation{ vote(id: 2) { outcome } }`,
       })
@@ -180,7 +180,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation {
           resetVotes(id: 1) {
@@ -192,7 +192,7 @@ describe('Server Endpoints', () => {
     const res2 = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation {
             resetVotes(id: 2) {
@@ -208,7 +208,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query { searchTags (searchString: "") { id } }`,
       })
@@ -220,7 +220,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query { searchTags (searchString: "test") { id } }`,
       })

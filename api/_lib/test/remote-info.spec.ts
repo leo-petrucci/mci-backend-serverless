@@ -28,7 +28,7 @@ describe('Remote info ', () => {
     const res2 = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation {
               updateRemoteInfo(id: 1, ip: "eu.mineplex.com") {
@@ -48,7 +48,7 @@ describe('Remote info ', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.MOD_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.MOD_TOKEN)
       .send({
         query: `mutation {
               updateRemoteInfo(id: 2, ip: "eu.mineplex.com") {
@@ -64,7 +64,7 @@ describe('Remote info ', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `mutation {
               updateRemoteInfo(id: 3, ip: "eu.mineplex.com") {
@@ -80,7 +80,7 @@ describe('Remote info ', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `mutation {
               updateRemoteInfo(id: 2, ip: "eu.mineplex.com") {
@@ -95,7 +95,7 @@ describe('Remote info ', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.BANNED_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.BANNED_TOKEN)
       .send({
         query: `mutation {
               updateRemoteInfo(id: 1, ip: "eu.mineplex.com") {

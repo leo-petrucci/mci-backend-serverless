@@ -28,7 +28,7 @@ describe('Tag Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query{ server(id: 1) { title, tags { tagName } } }`,
       })
@@ -48,7 +48,7 @@ describe('Tag Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query{ feed { title, tags { tagName } } }`,
       })
@@ -59,7 +59,7 @@ describe('Tag Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query { searchTags (searchString: "") { id } }`,
       })
@@ -71,7 +71,7 @@ describe('Tag Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.USER_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
       .send({
         query: `query { searchTags (searchString: "test") { id } }`,
       })
