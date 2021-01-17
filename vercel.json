@@ -1,12 +1,14 @@
 {
   "version": 2,
   "env": {
-    "DATABASE_URL": "@database-url-prod",
+    "DATABASE_URL": "@database_url",
+    "APP_SECRET": "@app_secret",
     "NODE_ENV": "production"
   },
   "build": {
     "env": {
-      "DATABASE_URL": "@database-url-prod",
+      "DATABASE_URL": "@database_url",
+      "APP_SECRET": "@app_secret",
       "NODE_ENV": "production"
     }
   }
