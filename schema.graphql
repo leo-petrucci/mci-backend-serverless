@@ -27,11 +27,11 @@ type Mutation {
 
 type Query {
   allServers: [Server]
-  feed(date: String! = "2021-01-17T16:57:51.975Z", page: Int! = 0): [Server]
+  feed(date: String! = "2021-01-17T21:42:11.949Z", page: Int! = 0): [Server]
   me: User
-  searchServers(date: String! = "2021-01-17T16:57:51.975Z", page: Int! = 0, searchString: String): [Server]
+  searchServers(date: String! = "2021-01-17T21:42:11.949Z", page: Int! = 0, searchString: String): [Server]
   searchTags(searchString: String!): [Tag]
-  server(date: String! = "2021-01-17T16:57:51.975Z", id: Int): Server
+  server(date: String! = "2021-01-17T21:42:11.949Z", id: Int): Server
   users: [User]
 }
 
@@ -40,8 +40,10 @@ type Server {
   canVote: Boolean
   content: String
   cover: String
+  createdAt: String
   id: Int
   ip: String
+  lastUpdated: String
   published: Boolean
   slots: Int
   tags: [Tag]
