@@ -8,8 +8,8 @@ const prisma = new PrismaClient({
 
 export interface Context {
   prisma: PrismaClient
-  res: any
-  req: any
+  res: ServerResponse
+  req: IncomingMessage
 }
 
 // @ts-ignore

@@ -18,7 +18,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ updateTitle(id: 1, title: null) { server { title } } }`,
       })
@@ -32,7 +32,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ updateTitle(id: 1, title: "test") { server { title } } }`,
       })
@@ -45,7 +45,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ updateTitle(id: 1, title: "${new Array(281 + 1).join(
           'a',
@@ -60,7 +60,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ addTag(id: 1, tags: []) { server { title } } }`,
       })
@@ -73,7 +73,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ addTag(id: 1, tags: null) { server { title } } }`,
       })
@@ -86,7 +86,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ addTag(id: 1, cover: "test") { server { title } } }`,
       })
@@ -99,7 +99,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ addTag(id: 1, cover: "http://test") { server { title } } }`,
       })
@@ -112,7 +112,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ updateContent(id: 1, content: "test") { server { title } } }`,
       })
@@ -125,7 +125,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ updateContent(id: 1, content: "${new Array(
           10001 + 1,
@@ -140,7 +140,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ createServer(title: "test") { server { title } } }`,
       })
@@ -153,7 +153,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ createServer(title: "${new Array(281 + 1).join(
           'a',
@@ -168,7 +168,7 @@ describe('Server Endpoints', () => {
     const res = await chai
       .request(app)
       .post('/api')
-      .set('Cookie', 'token=' + process.env.ADMIN_TOKEN)
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
       .send({
         query: `mutation{ createServer(title: "${new Array(20 + 1).join(
           'a',
