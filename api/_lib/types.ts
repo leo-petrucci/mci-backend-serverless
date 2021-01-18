@@ -6,7 +6,9 @@ export const Status = objectType({
     t.field('online', { type: 'Boolean' })
     t.field('db', { type: 'String' })
     t.field('origin', { type: 'String' })
-    t.field('test', { type: 'String' })
+    t.field('userClientID', { type: 'String' })
+    t.field('userClientSecret', { type: 'String' })
+    t.field('redirectUri', { type: 'String' })
   },
 })
 export const User = objectType({

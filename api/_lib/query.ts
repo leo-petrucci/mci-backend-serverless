@@ -16,7 +16,9 @@ export const Query = queryType({
           online: true,
           db: process.env.DATABASE_URL,
           origin: process.env.ALLOWED_ORIGIN,
-          test: JSON.stringify(test),
+          userClientID: process.env.USER_CLIENT_ID,
+          userClientSecret: process.env.USER_CLIENT_SECRET,
+          redirectUri: process.env.REDIRECT_URI,
         }
       },
     })
