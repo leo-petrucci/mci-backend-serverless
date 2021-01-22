@@ -227,4 +227,12 @@ describe('Server Endpoints', () => {
     expect(res).to.have.status(200)
     expect(res.body.data.searchTags).to.be.an('array')
   })
+  it('feed can be searched', async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query{ feed ( search: "test" ) { title } }`,
+    })
+    expect(res).to.have.status(200)
+    console.log(res.body.data.feed)
+    // expect(res.body.data.feed[0].author.username).to.be.a('string', 'Guru')
+  })
 })

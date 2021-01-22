@@ -54,8 +54,9 @@ export const Query = queryType({
       args: {
         date: nonNull(stringArg({ default: new Date().toISOString() })),
         page: nonNull(intArg({ default: 0 })),
+        search: nullable(stringArg()),
       },
-      resolve: async (parent, { date, page }, ctx) => {
+      resolve: async (parent, { date, page, search }, ctx) => {
         const pageLimit = 10
         const [d, f] = getDates(date)
 
@@ -64,7 +65,9 @@ export const Query = queryType({
           userId = getUserId(ctx, true)
         } catch (error) {}
 
-        return ctx.prisma.$queryRaw`
+        let servers
+        try {
+          servers = await ctx.prisma.$queryRaw`
                 SELECT DISTINCT
                     s.id
                 ,   s.title
@@ -172,43 +175,22 @@ export const Query = queryType({
                             v."serverId" = s.id`
                         : empty
                     }
+                ${
+                  search
+                    ? sql`
+                  WHERE s.title LIKE ${
+                    '%' + search.toString() + '%'
+                  } OR s.content LIKE ${'%' + search.toString() + '%'}`
+                    : empty
+                }
                 ORDER BY
                     "voteCount" DESC, s."lastUpdated" DESC
                 OFFSET ${page > 10 ? pageLimit * 25 : page} LIMIT 25;
             `
-      },
-    })
-
-    t.list.field('searchServers', {
-      type: 'Server',
-      args: {
-        date: nonNull(stringArg({ default: new Date().toISOString() })),
-        searchString: nullable(stringArg()),
-        page: nonNull(intArg({ default: 0 })),
-      },
-      resolve: async (parent, { searchString, date, page }, ctx) => {
-        const [d, f] = getDates(date)
-        const pageLimit = 10
-        return await ctx.prisma
-          .$queryRaw`SELECT s.id, s.title, s.cover, s."createdAt", s.content, s.slots, s.cover, sum(case WHEN v."createdAt" >= ${d} AND v."createdAt" < ${f}
-          THEN 1 ELSE 0 END ) AS "voteCount", CASE WHEN EXISTS 
-          (SELECT v.id FROM "Vote" AS v WHERE v."createdAt" >= '2020-09-01' AND v."createdAt" <= '2020-10-01' AND v."authorId" = 6667)
-            THEN 1 
-            ELSE 0 
-            END as "hasVoted",
-            json_agg(json_build_object('id', t.id, 'tagName', t."tagName")) as "tags",
-          json_build_object('username', u.username, 'id', u.id, 'photoUrl', u."photoUrl") AS "author" 
-        FROM "Server" AS s 
-          LEFT JOIN "User" u ON (s."authorId" = u.id) 
-          LEFT JOIN "Vote" AS v ON (s.id = "serverId") 
-          LEFT JOIN "_ServerToTag" st ON (s.id = st."A") 
-          LEFT JOIN "Tag" t ON (st."B" = t.id)
-        WHERE title LIKE ${'%' + searchString + '%'} OR content LIKE ${
-          '%' + searchString + '%'
-        } 
-        GROUP BY s.id, u.id 
-        ORDER BY "voteCount" DESC
-        OFFSET ${page > 10 ? pageLimit * 25 : page} LIMIT 25;`
+        } catch (err) {
+          return new Error(err)
+        }
+        return servers
       },
     })
 
