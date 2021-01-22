@@ -229,10 +229,11 @@ describe('Server Endpoints', () => {
   })
   it('feed can be searched', async () => {
     const res = await chai.request(app).post('/api').send({
-      query: `query{ feed ( search: "test" ) { title } }`,
+      query: `query { feed ( search: "test" ) { title } }`,
     })
-    expect(res).to.have.status(200)
-    console.log(res.body.data.feed)
-    // expect(res.body.data.feed[0].author.username).to.be.a('string', 'Guru')
+    expect(res.body.data.feed).to.include.deep.members([
+      { title: 'Test server 1' },
+      { title: 'Test server 3' },
+    ])
   })
 })

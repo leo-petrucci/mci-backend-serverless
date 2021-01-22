@@ -178,9 +178,11 @@ export const Query = queryType({
                 ${
                   search
                     ? sql`
-                  WHERE s.title LIKE ${
-                    '%' + search.toString() + '%'
-                  } OR s.content LIKE ${'%' + search.toString() + '%'}`
+                  WHERE lower(s.title) LIKE ${
+                    '%' + search.toString().toLowerCase() + '%'
+                  } OR lower(s.content) LIKE ${
+                        '%' + search.toString().toLowerCase() + '%'
+                      }`
                     : empty
                 }
                 ORDER BY
