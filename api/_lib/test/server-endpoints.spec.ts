@@ -241,7 +241,7 @@ describe('Server Endpoints', () => {
       query: `query { feedByTag ( tag: "test 2" ) { title } }`,
     })
     expect(res.body.data.feedByTag).to.include.deep.members([
-      { title: 'Test server 2' },
+      { title: 'New title of a big ole server' },
       { title: 'Test server 1' },
     ])
   })
