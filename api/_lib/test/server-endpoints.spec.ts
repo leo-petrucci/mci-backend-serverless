@@ -236,4 +236,19 @@ describe('Server Endpoints', () => {
       { title: 'Test server 3' },
     ])
   })
+  it('feed by tag returns correct output', async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { feedByTag ( tag: "test 2" ) { title } }`,
+    })
+    expect(res.body.data.feedByTag).to.include.deep.members([
+      { title: 'Test server 2' },
+      { title: 'Test server 1' },
+    ])
+  })
+  it('feed by tag returns nothing if partial match', async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { feedByTag ( tag: "test" ) { title } }`,
+    })
+    expect(res.body.data.feedByTag).to.have.length(0)
+  })
 })
