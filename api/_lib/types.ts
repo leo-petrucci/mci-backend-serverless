@@ -61,8 +61,8 @@ export const Vote = objectType({
   },
 })
 
-export const VoteCast = objectType({
-  name: 'VoteCast',
+export const Outcome = objectType({
+  name: 'Outcome',
   definition(t) {
     t.field('outcome', { type: 'String' })
   },

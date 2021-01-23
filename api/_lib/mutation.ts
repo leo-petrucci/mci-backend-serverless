@@ -21,6 +21,7 @@ import {
   getMciProfile,
   getDates,
   verifyRefreshToken,
+  deleteTokens,
 } from './utils'
 import { MaybePromise } from 'nexus/dist/core'
 let cookie = require('cookie')
@@ -118,6 +119,16 @@ export const Mutation = mutationType({
 
         return {
           user,
+        }
+      },
+    })
+
+    t.field('logout', {
+      type: 'Outcome',
+      resolve: async (_parent, args, ctx): Promise<any> => {
+        await deleteTokens(ctx)
+        return {
+          outcome: "You've been logged out.",
         }
       },
     })
@@ -412,7 +423,7 @@ export const Mutation = mutationType({
     })
 
     t.field('vote', {
-      type: 'VoteCast',
+      type: 'Outcome',
       args: { id: nonNull(intArg()) },
       resolve: async (parent, { id }, ctx): Promise<any> => {
         const userId = getUserId(ctx)

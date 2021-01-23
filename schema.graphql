@@ -10,6 +10,7 @@ type Mutation {
   addTag(id: Int!, tags: [String!]!): Server
   createServer(content: String, cover: String, ip: String!, tags: [String!]!, title: String!): Server
   deleteServer(id: Int!): Server
+  logout: Outcome
   oAuthLogin(code: String!): AuthPayload
   publishServer(id: Int!): Server
   refresh: AuthPayload
@@ -22,16 +23,20 @@ type Mutation {
   updateRemoteInfo(id: Int!, ip: String!): Server
   updateRole(id: Int!, role: String!): UserPayload
   updateTitle(id: Int!, title: String!): Server
-  vote(id: Int!): VoteCast
+  vote(id: Int!): Outcome
+}
+
+type Outcome {
+  outcome: String
 }
 
 type Query {
   allServers: [Server]
-  feed(date: String! = "2021-01-23T16:22:17.617Z", page: Int! = 0, search: String): [Server]
-  feedByTag(date: String! = "2021-01-23T16:22:17.617Z", page: Int! = 0, tag: String!): [Server]
+  feed(date: String! = "2021-01-23T21:44:16.682Z", page: Int! = 0, search: String): [Server]
+  feedByTag(date: String! = "2021-01-23T21:44:16.682Z", page: Int! = 0, tag: String!): [Server]
   me: User
   searchTags(searchString: String!): [Tag]
-  server(date: String! = "2021-01-23T16:22:17.617Z", id: Int): Server
+  server(date: String! = "2021-01-23T21:44:16.682Z", id: Int): Server
   status: Status
   users: [User]
 }
@@ -96,8 +101,4 @@ type Vote {
   createdAt: String
   id: Int
   server: Server
-}
-
-type VoteCast {
-  outcome: String
 }

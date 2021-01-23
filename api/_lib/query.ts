@@ -374,9 +374,9 @@ export const Query = queryType({
           userId = getUserId(ctx, true)
         } catch (error) {}
 
-        let servers
-
-        servers = await ctx.prisma.$queryRaw`
+        let server
+        try {
+          server = await ctx.prisma.$queryRaw`
             SELECT 
                 s.id
             ,   s.title
@@ -401,6 +401,7 @@ export const Query = queryType({
                 (
                     SELECT
                         st."A"
+                    ,   COUNT(*) AS "TAGS"  
                     ,   json_agg(
                             json_build_object(
                                 'id', 
@@ -489,7 +490,10 @@ export const Query = queryType({
                     s.id = ${id}
                 LIMIT 1;
                 `
-        return servers[0]
+        } catch (err) {
+          return new Error(err)
+        }
+        return server[0]
       },
     })
 

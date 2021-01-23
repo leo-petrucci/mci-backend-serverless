@@ -61,6 +61,15 @@ export async function issueTokens(ctx: Context, user: User) {
   ])
 }
 
+export async function deleteTokens(ctx: Context) {
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  ctx.res.setHeader('Set-Cookie', [
+    `accessToken=; HttpOnly; Expires=${yesterday};`,
+    `refreshToken=; HttpOnly; Expires=${yesterday};`,
+  ])
+}
+
 export async function getServerInfo(
   Ip: String,
   context: Context,
