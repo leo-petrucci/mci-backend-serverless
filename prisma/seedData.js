@@ -44,6 +44,21 @@ const serverData = [
     tags: { tagName: 'third' },
     version: { versionName: '1.8.x-1.16.x' },
   },
+  {
+    id: 4,
+    title: 'Unpublished server',
+    content:
+      'A description of the server that contains at least 200 characters, I do realise that is quite a lot but we might as well ask for a decent description rather than leaving it being shit. This is still not enough which is honestly quite surprising as I really did think it was going to be 200 characters',
+    published: false,
+    createdAt: '2020-11-22T15:47:25.476Z',
+    cover: 'https://via.placeholder.com/350x150.jpg',
+    slots: 1068,
+    ip: 'eu.mineplex.com',
+    authorId: 1,
+    versionId: 1,
+    tags: { tagName: 'third' },
+    version: { versionName: '1.8.x-1.16.x' },
+  },
 ]
 
 const userData = [
