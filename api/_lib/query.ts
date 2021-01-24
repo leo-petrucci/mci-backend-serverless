@@ -187,7 +187,9 @@ export const Query = queryType({
                 }
                 ORDER BY
                     "voteCount" DESC, s."lastUpdated" DESC
-                OFFSET ${page > 10 ? pageLimit * 25 : page} LIMIT 15;
+                OFFSET ${
+                  page > pageLimit ? pageLimit * 15 : page * 15
+                } LIMIT 15;
             `
         } catch (err) {
           return new Error(err)
@@ -351,7 +353,9 @@ export const Query = queryType({
                     t."tagName" LIKE ${tag}
                 ORDER BY
                     "voteCount" DESC, server."lastUpdated" DESC
-                OFFSET ${page > 10 ? pageLimit * 25 : page} LIMIT 15;
+                OFFSET ${
+                  page > pageLimit ? pageLimit * 15 : page * 15
+                } LIMIT 15;
             `
         } catch (err) {
           return new Error(err)
