@@ -10,6 +10,7 @@ export const APP_SECRET: string = process.env.APP_SECRET!
 
 interface Token {
   userId: string
+  role: string
 }
 
 export function getUserId(context: Context, bypassError: boolean = false) {
@@ -19,6 +20,19 @@ export function getUserId(context: Context, bypassError: boolean = false) {
     try {
       const verifiedToken = verify(accessToken, APP_SECRET) as Token
       return verifiedToken && verifiedToken.userId
+    } catch (error) {
+      throw new Error('Could not authenticate user.')
+    }
+  }
+}
+
+export function getUserRole(context: Context) {
+  if (context.req.headers['cookie']) {
+    const Authorization = cookie.parse(context.req.headers['cookie'])
+    const { accessToken } = Authorization
+    try {
+      const verifiedToken = verify(accessToken, APP_SECRET) as Token
+      return verifiedToken && verifiedToken.role
     } catch (error) {
       throw new Error('Could not authenticate user.')
     }

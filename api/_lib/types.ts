@@ -73,6 +73,7 @@ export const Server = objectType({
   definition(t) {
     t.field('id', { type: 'Int' })
     t.field('published', { type: 'Boolean' })
+    t.field('hasEditPrivileges', { type: 'Boolean' })
     t.field('createdAt', { type: 'String' })
     t.field('lastUpdated', { type: 'String' })
     t.field('title', { type: 'String' })

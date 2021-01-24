@@ -198,4 +198,175 @@ describe('Permissions', () => {
     expect(res.body.data.updateRole.user).to.exist
     expect(res.body.data.updateRole.user.role).to.be.a('string', 'mod')
   })
+  it("logged out users don't have editPrivileges", async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { server (id: 2) { title, hasEditPrivileges } }`,
+    })
+    expect(res.body.data.server.title).to.be.a('string', 'Test server 1')
+    expect(res.body.data.server.hasEditPrivileges).to.be.a('boolean', 'false')
+  })
+  it('logged in users have editPrivileges for servers they own', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
+      .send({
+        query: `query { server (id: 2) { title, hasEditPrivileges } }`,
+      })
+    expect(res.body.data.server.title).to.be.a('string', 'Test server 1')
+    expect(res.body.data.server.hasEditPrivileges).to.be.a('boolean', 'true')
+  })
+  it("logged in users don't have editPrivileges for servers they don't own", async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
+      .send({
+        query: `query { server (id: 3) { title, hasEditPrivileges } }`,
+      })
+    expect(res.body.data.server.title).to.be.a('string', 'Test server 3')
+    expect(res.body.data.server.hasEditPrivileges).to.be.a('boolean', 'false')
+  })
+  it("mods have editPrivileges for servers they don't own", async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.MOD_TOKEN)
+      .send({
+        query: `query { server (id: 3) { title, hasEditPrivileges } }`,
+      })
+    expect(res.body.data.server.title).to.be.a('string', 'Test server 3')
+    expect(res.body.data.server.hasEditPrivileges).to.be.a('boolean', 'true')
+  })
+  it("admins have editPrivileges for servers they don't own", async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
+      .send({
+        query: `query { server (id: 3) { title, hasEditPrivileges } }`,
+      })
+    expect(res.body.data.server.title).to.be.a('string', 'Test server 3')
+    expect(res.body.data.server.hasEditPrivileges).to.be.a('boolean', 'true')
+  })
+  it("logged out users can't see unpublished servers", async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { server (id: 4) { title } }`,
+    })
+    expect(res.body.data.server).to.be.null
+  })
+  it("logged in users can't see unpublished servers", async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { server (id: 4) { title } }`,
+    })
+    expect(res.body.data.server).to.be.null
+  })
+  it('mods can see unpublished servers', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.MOD_TOKEN)
+      .send({
+        query: `query { server (id: 4) { title } }`,
+      })
+    expect(res.body.data.server.title).to.be.a('string', 'Unpublished server')
+  })
+  it('admins can see unpublished servers', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
+      .send({
+        query: `query { server (id: 4) { title } }`,
+      })
+    expect(res.body.data.server.title).to.be.a('string', 'Unpublished server')
+  })
+  it("logged out users can't see unpublished servers in feed", async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { feed { title } }`,
+    })
+    expect(res.body.data.feed).to.not.include.deep.members([
+      { title: 'Unpublished server' },
+    ])
+  })
+  it("logged in  users can't see unpublished servers in feed", async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
+      .send({
+        query: `query { feed { title } }`,
+      })
+    expect(res.body.data.feed).to.not.include.deep.members([
+      { title: 'Unpublished server' },
+    ])
+  })
+  it('mods can see unpublished servers in feed', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.MOD_TOKEN)
+      .send({
+        query: `query { feed { title } }`,
+      })
+    expect(res.body.data.feed).to.include.deep.members([
+      { title: 'Unpublished server' },
+    ])
+  })
+  it('admins can see unpublished servers in feed', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
+      .send({
+        query: `query { feed { title } }`,
+      })
+    expect(res.body.data.feed).to.include.deep.members([
+      { title: 'Unpublished server' },
+    ])
+  })
+  it("logged out users can't see unpublished servers in feed by tag", async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { feedByTag ( tag: "third" ) { title } }`,
+    })
+    expect(res.body.data.feedByTag).to.not.include.deep.members([
+      { title: 'Unpublished server' },
+    ])
+  })
+  it("logged in  users can't see unpublished servers in feed by tag", async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.USER_TOKEN)
+      .send({
+        query: `query { feedByTag ( tag: "third" ) { title } }`,
+      })
+    expect(res.body.data.feedByTag).to.not.include.deep.members([
+      { title: 'Unpublished server' },
+    ])
+  })
+  it('mods can see unpublished servers in feed by tag', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.MOD_TOKEN)
+      .send({
+        query: `query { feedByTag ( tag: "third" ) { title } }`,
+      })
+    expect(res.body.data.feedByTag).to.include.deep.members([
+      { title: 'Unpublished server' },
+    ])
+  })
+  it('admins can see unpublished servers in feed by tag', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api')
+      .set('Cookie', 'accessToken=' + process.env.ADMIN_TOKEN)
+      .send({
+        query: `query { feedByTag ( tag: "third" ) { title } }`,
+      })
+    expect(res.body.data.feedByTag).to.include.deep.members([
+      { title: 'Unpublished server' },
+    ])
+  })
 })

@@ -1,6 +1,6 @@
 import { empty, sql } from '@prisma/client'
 import { intArg, nonNull, nullable, queryType, stringArg } from 'nexus'
-import { getDates, getUserId } from './utils'
+import { getDates, getUserId, getUserRole } from './utils'
 
 export const Query = queryType({
   definition(t) {
@@ -65,12 +65,18 @@ export const Query = queryType({
           userId = getUserId(ctx, true)
         } catch (error) {}
 
+        let userRole
+        try {
+          userRole = getUserRole(ctx)
+        } catch (error) {}
+
         let servers
         try {
           servers = await ctx.prisma.$queryRaw`
                 SELECT DISTINCT
                     s.id
                 ,   s.title
+                ,   s.published
                 ,   s.content
                 ,   s.ip
                 ,   s."lastUpdated"
@@ -175,14 +181,19 @@ export const Query = queryType({
                             v."serverId" = s.id`
                         : empty
                     }
+                WHERE s.published = true ${
+                  userRole === 'mod' || userRole === 'admin'
+                    ? sql`OR s.published = false`
+                    : empty
+                }
                 ${
                   search
                     ? sql`
-                    WHERE lower(s.title) LIKE ${
-                      '%' + search.toString().toLowerCase() + '%'
-                    } OR lower(s.content) LIKE ${
-                        '%' + search.toString().toLowerCase() + '%'
-                      }`
+                    AND lower(s.title) LIKE ${`%${search
+                      .toString()
+                      .toLowerCase()}%`} OR lower(s.content) LIKE ${`%${search
+                        .toString()
+                        .toLowerCase()}%`}`
                     : empty
                 }
                 ORDER BY
@@ -214,6 +225,11 @@ export const Query = queryType({
           userId = getUserId(ctx, true)
         } catch (error) {}
 
+        let userRole
+        try {
+          userRole = getUserRole(ctx)
+        } catch (error) {}
+
         let servers
         try {
           servers = await ctx.prisma.$queryRaw`
@@ -221,6 +237,7 @@ export const Query = queryType({
                     server.id
                 ,   server.title
                 ,   server.content
+                ,   server.published
                 ,   server.ip
                 ,   server."lastUpdated"
                 ,   server.cover
@@ -243,6 +260,7 @@ export const Query = queryType({
                             st."B"
                         ,   s.id
                         ,   s.title
+                        ,   s.published
                         ,   s.content
                         ,   s.ip
                         ,   s."lastUpdated"
@@ -350,7 +368,12 @@ export const Query = queryType({
                         : empty
                     }
                 WHERE
-                    t."tagName" LIKE ${tag}
+                    t."tagName" LIKE ${tag} AND
+                    server.published = true ${
+                      userRole === 'mod' || userRole === 'admin'
+                        ? sql`OR server.published = false`
+                        : empty
+                    }
                 ORDER BY
                     "voteCount" DESC, server."lastUpdated" DESC
                 OFFSET ${
@@ -378,6 +401,11 @@ export const Query = queryType({
           userId = getUserId(ctx, true)
         } catch (error) {}
 
+        let userRole
+        try {
+          userRole = getUserRole(ctx)
+        } catch (error) {}
+
         let server
         try {
           server = await ctx.prisma.$queryRaw`
@@ -393,6 +421,13 @@ export const Query = queryType({
             ,   a."author"::jsonb
             ,   ver."version"::jsonb
             ,   COALESCE(v."VOTES", 0) AS "voteCount"
+            ,   ${
+              userId
+                ? userRole === 'mod' || userRole === 'admin'
+                  ? sql`1 AS "hasEditPrivileges"`
+                  : sql`CASE WHEN s."authorId" = ${userId} THEN 1 ELSE 0 END AS "hasEditPrivileges"`
+                : sql`0 AS "hasEditPrivileges"`
+            } 
             ,   ${
               userId
                 ? sql`CASE WHEN uv."serverId" IS NULL THEN 1 ELSE 0 END AS "canVote"`
@@ -492,6 +527,11 @@ export const Query = queryType({
                 }
                 WHERE 
                     s.id = ${id}
+                 ${
+                   userRole === 'mod' || userRole === 'admin'
+                     ? empty
+                     : sql`AND s.published = true`
+                 }
                 LIMIT 1;
                 `
         } catch (err) {
