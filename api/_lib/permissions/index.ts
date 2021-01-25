@@ -1,18 +1,14 @@
 import { rule, shield, and, or, not } from 'graphql-shield'
-import { getUserId } from '../utils'
+import { getUserBanned, getUserId, getUserRole } from '../utils'
 
 const rules = {
   isAuthenticatedUser: rule()(async (parent, args, context) => {
     const userId = getUserId(context)
-    const user = await context.prisma.user.findUnique({
-      where: {
-        id: Number(userId),
-      },
-    })
-    if (user.banned) {
+    const banned = getUserBanned(context)
+    if (banned) {
       return new Error('This account is banned.')
     }
-    return Boolean(userId) && !user.banned
+    return Boolean(userId) && !banned
   }),
   isServerOwner: rule()(async (parent, { id }, context) => {
     const userId = getUserId(context)
@@ -38,22 +34,13 @@ const rules = {
     return userId === author.id
   }),
   fromMod: rule()(async (parent, { id }, context) => {
-    const userId = getUserId(context)
-    const user = await context.prisma.user.findUnique({
-      where: {
-        id: Number(userId),
-      },
-    })
-    return user.role === 'admin' || user.role === 'mod'
+    const userRole = getUserRole(context)
+    return userRole === 'admin' || userRole === 'mod'
   }),
   fromAdmin: rule()(async (parent, { id }, context) => {
-    const userId = getUserId(context)
-    const user = await context.prisma.user.findUnique({
-      where: {
-        id: Number(userId),
-      },
-    })
-    return user.role === 'admin'
+    const userRole = getUserRole(context)
+
+    return userRole === 'admin'
   }),
   isMod: rule()(async (parent, { id }, context) => {
     const user = await context.prisma.user.findUnique({
