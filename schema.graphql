@@ -22,6 +22,7 @@ type Mutation {
   updateIp(id: Int!, ip: String!): Server
   updateRemoteInfo(id: Int!, ip: String!): Server
   updateRole(id: Int!, role: String!): UserPayload
+  updateServer(content: String, cover: String, id: Int!, ip: String!, tags: [String!]!, title: String!): Server
   updateTitle(id: Int!, title: String!): Server
   vote(id: Int!): Outcome
 }
@@ -32,11 +33,11 @@ type Outcome {
 
 type Query {
   allServers: [Server]
-  feed(date: String! = "2021-01-25T16:37:24.382Z", page: Int! = 0, search: String): [Server]
-  feedByTag(date: String! = "2021-01-25T16:37:24.382Z", page: Int! = 0, tag: String!): [Server]
+  feed(date: String! = "2021-01-25T20:11:25.235Z", page: Int! = 0, search: String): [Server]
+  feedByTag(date: String! = "2021-01-25T20:11:25.235Z", page: Int! = 0, tag: String!): [Server]
   me: User
   searchTags(searchString: String!): [Tag]
-  server(date: String! = "2021-01-25T16:37:24.382Z", id: Int): Server
+  server(date: String! = "2021-01-25T20:11:25.235Z", id: Int): Server
   status: Status
   users: [User]
 }

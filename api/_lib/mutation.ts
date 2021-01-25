@@ -390,6 +390,58 @@ export const Mutation = mutationType({
       },
     })
 
+    t.field('updateServer', {
+      type: 'Server',
+      args: {
+        id: nonNull(intArg()),
+        title: nonNull(stringArg()),
+        content: stringArg(),
+        cover: stringArg(),
+        tags: nonNull(list(nonNull('String'))),
+        ip: nonNull(stringArg()),
+      },
+      resolve: async (
+        parent,
+        { id, title, content, cover, tags, ip },
+        ctx,
+      ): Promise<any> => {
+        const userId = getUserId(ctx)
+
+        try {
+          await validationSchema.title.validate({ title })
+          await validationSchema.content.validate({ content })
+          await validationSchema.cover.validate({ cover })
+          await validationSchema.tags.validate({ tags })
+        } catch (e) {
+          return new Error(e.errors[0])
+        }
+
+        const tagObjects = await getTagsQuery(ctx, tags)
+
+        if (!userId) return new Error('Could not authenticate user.')
+
+        // Fetch server info
+        let serverInfo = await getServerInfo(ip, ctx)
+        if (!serverInfo.online) return new Error('Could not find server info.')
+
+        // return create or connect version
+        const versionQuery = await getVersionQuery(ctx, serverInfo.version)
+        const server = await ctx.prisma.server.update({
+          where: { id },
+          data: {
+            title,
+            content,
+            cover,
+            ip: ip,
+            version: versionQuery,
+            slots: serverInfo.players.max,
+            tags: tagObjects,
+          },
+        })
+        return server
+      },
+    })
+
     t.field('deleteServer', {
       type: 'Server',
       args: { id: nonNull(intArg()) },
