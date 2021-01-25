@@ -100,7 +100,6 @@ describe('Permissions', () => {
           }
         }`,
       })
-    console.log(res)
     expect(res).to.have.status(200)
     expect(res.body.data.updateBan.user.banned).to.be.a('boolean', true)
   })
