@@ -451,7 +451,7 @@ export const Mutation = mutationType({
             id,
           },
           data: {
-            published: true,
+            published: false,
           },
         })
         return server
