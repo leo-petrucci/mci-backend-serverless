@@ -454,7 +454,7 @@ export const Mutation = mutationType({
             published: true,
           },
         })
-        return { server }
+        return server
       },
     })
 
@@ -470,7 +470,7 @@ export const Mutation = mutationType({
             published: true,
           },
         })
-        return { server }
+        return server
       },
     })
 

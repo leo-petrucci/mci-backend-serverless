@@ -413,6 +413,7 @@ export const Query = queryType({
                 s.id
             ,   s.title
             ,   s.content
+            ,   s.published
             ,   s.cover
             ,   s."lastUpdated"
             ,   s.ip
