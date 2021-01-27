@@ -500,9 +500,6 @@ export const Mutation = mutationType({
           }
         } else {
           return new Error('You have already voted for this server this month.')
-          return {
-            outcome: 'You have already voted for this server this month.',
-          }
         }
       },
     })

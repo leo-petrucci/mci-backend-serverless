@@ -251,4 +251,26 @@ describe('Server Endpoints', () => {
     })
     expect(res.body.data.feedByTag).to.have.length(0)
   })
+  it('feed by version returns correct output', async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { feedByVersion ( version: "1.8.x-1.16.x" ) { title } }`,
+    })
+    expect(res.body.data.feedByVersion).to.include.deep.members([
+      { title: 'Test server 1' },
+      { title: 'New title of a big ole server' },
+      { title: 'Test server 3' },
+    ])
+  })
+  it('feed by version returns nothing if partial match', async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { feedByVersion ( version: "1.8.x-" ) { title } }`,
+    })
+    expect(res.body.data.feedByVersion).to.have.length(0)
+  })
+  it('feed by version returns nothing if no match', async () => {
+    const res = await chai.request(app).post('/api').send({
+      query: `query { feedByVersion ( version: "fakeversion" ) { title } }`,
+    })
+    expect(res.body.data.feedByVersion).to.have.length(0)
+  })
 })
