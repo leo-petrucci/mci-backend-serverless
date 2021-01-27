@@ -743,5 +743,19 @@ export const Query = queryType({
             `
       },
     })
+
+    t.list.field('searchVersions', {
+      type: 'Version',
+      args: {
+        searchString: nonNull(stringArg()),
+      },
+      resolve: async (parent, { searchString }, ctx) => {
+        if (searchString)
+          return await ctx.prisma.version.findMany({
+            where: { versionName: searchString },
+          })
+        return await ctx.prisma.version.findMany({})
+      },
+    })
   },
 })

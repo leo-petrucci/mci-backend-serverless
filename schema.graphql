@@ -33,12 +33,13 @@ type Outcome {
 
 type Query {
   allServers: [Server]
-  feed(date: String! = "2021-01-27T20:18:08.982Z", page: Int! = 0, search: String): [Server]
-  feedByTag(date: String! = "2021-01-27T20:18:08.982Z", page: Int! = 0, tag: String!): [Server]
-  feedByVersion(date: String! = "2021-01-27T20:18:08.982Z", page: Int! = 0, version: String!): [Server]
+  feed(date: String! = "2021-01-27T20:43:06.709Z", page: Int! = 0, search: String): [Server]
+  feedByTag(date: String! = "2021-01-27T20:43:06.709Z", page: Int! = 0, tag: String!): [Server]
+  feedByVersion(date: String! = "2021-01-27T20:43:06.709Z", page: Int! = 0, version: String!): [Server]
   me: User
   searchTags(searchString: String!): [Tag]
-  server(date: String! = "2021-01-27T20:18:08.982Z", id: Int): Server
+  searchVersions(searchString: String!): [Version]
+  server(date: String! = "2021-01-27T20:43:06.709Z", id: Int): Server
   status: Status
   users: [User]
 }
