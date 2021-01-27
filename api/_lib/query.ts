@@ -387,6 +387,166 @@ export const Query = queryType({
       },
     })
 
+    t.list.field('feedByVersion', {
+      type: 'Server',
+      args: {
+        date: nonNull(stringArg({ default: new Date().toISOString() })),
+        page: nonNull(intArg({ default: 0 })),
+        version: nonNull(stringArg()),
+      },
+      resolve: async (parent, { date, page, version }, ctx) => {
+        const pageLimit = 10
+        const [d, f] = getDates(date)
+
+        let userId
+        try {
+          userId = getUserId(ctx, true)
+        } catch (error) {}
+
+        let userRole
+        try {
+          userRole = getUserRole(ctx)
+        } catch (error) {}
+
+        let servers
+        try {
+          servers = await ctx.prisma.$queryRaw`
+                  SELECT DISTINCT
+                      server.id
+                  ,   server.title
+                  ,   server.content
+                  ,   server.published
+                  ,   server.ip
+                  ,   server."lastUpdated"
+                  ,   server.cover
+                  ,   server.slots
+                  ,   server."createdAt"
+                  ,   a."author"::jsonb
+                    ,   jsonb_build_object(
+                        'id', version.id,
+                        'versionName', version."versionName"
+                    ) AS "version"
+                  ,   COALESCE(v."VOTES", 0) AS "voteCount" 
+                  ,   ${
+                    userId
+                      ? sql`CASE WHEN uv."serverId" IS NULL THEN 1 ELSE 0 END AS "canVote"`
+                      : sql`0 AS "canVote"`
+                  }
+                  ,   tag."tags"::jsonb
+                  FROM "Version" AS version
+                  -- Get server
+                  INNER JOIN
+                  (
+                      SELECT DISTINCT
+                          s.id
+                      ,   s.title
+                      ,   s.content
+                      ,   s.ip
+                      ,   s.published
+                      ,   s.cover
+                      ,   s.slots
+                      ,   s."createdAt"
+                      ,   s."versionId"
+                      ,   s."authorId"
+                      ,   s."lastUpdated"
+                      FROM "Server" AS s
+                  )   AS server
+                  ON 
+                      version.id = server."versionId"
+                    -- Get tags
+                    INNER JOIN
+                    (
+                        SELECT
+                            st."A"
+                        ,   json_agg(
+                                json_build_object(
+                                    'id', 
+                                    t.id, 
+                                    'tagName', 
+                                    t."tagName"
+                                )
+                            ) as "tags"
+                        FROM
+                            "_ServerToTag" AS st
+                        INNER JOIN
+                            "Tag" AS t
+                        ON
+                            t.id = st."B"
+                        GROUP BY
+                            st."A"
+                    ) AS tag
+                    ON
+                        tag."A" = server.id
+                      -- Build the author objects
+                      INNER JOIN
+                      (
+                          SELECT
+                              id
+                          ,   json_build_object(
+                                  'username', u.username,
+                                  'id', u.id,
+                                  'photoUrl', u."photoUrl"
+                              ) AS "author"
+                          FROM
+                              "User" as u
+                      ) AS a
+                      ON
+                          a.id = server."authorId"
+                      -- Count all the votes
+                      LEFT JOIN 
+                      (
+                          SELECT
+                              "serverId"
+                          ,   COUNT(DISTINCT v."authorId") AS "VOTES" 
+                          FROM 
+                              "Vote" as v 
+                          WHERE 
+                              v."createdAt" >= ${d} AND 
+                              v."createdAt" < ${f} 
+                          GROUP BY "serverId"
+                      ) as v 
+                      ON 
+                          server.id = v."serverId"
+                      ${
+                        userId
+                          ? sql`-- Get the current user's votes in this period
+                          LEFT JOIN
+                          (
+                              SELECT DISTINCT
+                                  "serverId"
+                              FROM
+                                  "Vote"
+                              WHERE
+                                  "createdAt" >= ${d}
+                              AND
+                                  "createdAt" <  ${f}
+                              AND
+                                  "authorId" = ${userId}
+                          ) AS uv
+                          ON
+                              v."serverId" = server.id`
+                          : empty
+                      }
+                  WHERE
+                      version."versionName" LIKE ${version} AND
+                      server.published = true ${
+                        userRole === 'mod' || userRole === 'admin'
+                          ? sql`OR server.published = false`
+                          : empty
+                      }
+                  ORDER BY
+                      "voteCount" DESC, server."lastUpdated" DESC
+                  OFFSET ${
+                    page > pageLimit ? pageLimit * 15 : page * 15
+                  } LIMIT 15;
+              `
+        } catch (err) {
+          return new Error(err)
+        }
+        return servers
+      },
+    })
+
     t.field('server', {
       type: 'Server',
       args: {
