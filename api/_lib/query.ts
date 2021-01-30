@@ -181,19 +181,19 @@ export const Query = queryType({
                             v."serverId" = s.id`
                         : empty
                     }
-                WHERE s.published = true ${
+                WHERE (s.published = true ${
                   userRole === 'mod' || userRole === 'admin'
-                    ? sql`OR s.published = false`
+                    ? sql`OR s.published = false `
                     : empty
-                }
+                })
                 ${
                   search
                     ? sql`
-                    AND lower(s.title) LIKE ${`%${search
+                    AND (lower(s.title) LIKE ${`%${search
                       .toString()
                       .toLowerCase()}%`} OR lower(s.content) LIKE ${`%${search
                         .toString()
-                        .toLowerCase()}%`}`
+                        .toLowerCase()}%`})`
                     : empty
                 }
                 ORDER BY
@@ -368,12 +368,12 @@ export const Query = queryType({
                         : empty
                     }
                 WHERE
-                    t."tagName" LIKE ${tag} AND
-                    server.published = true ${
+                    (t."tagName" LIKE ${tag}) AND
+                    (server.published = true ${
                       userRole === 'mod' || userRole === 'admin'
                         ? sql`OR server.published = false`
                         : empty
-                    }
+                    })
                 ORDER BY
                     "voteCount" DESC, server."lastUpdated" DESC
                 OFFSET ${
@@ -528,12 +528,12 @@ export const Query = queryType({
                           : empty
                       }
                   WHERE
-                      version."versionName" LIKE ${version} AND
-                      server.published = true ${
+                      (version."versionName" LIKE ${version}) AND
+                      (server.published = true ${
                         userRole === 'mod' || userRole === 'admin'
                           ? sql`OR server.published = false`
                           : empty
-                      }
+                      })
                   ORDER BY
                       "voteCount" DESC, server."lastUpdated" DESC
                   OFFSET ${
