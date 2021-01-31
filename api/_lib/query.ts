@@ -683,7 +683,7 @@ export const Query = queryType({
                         "authorId" = ${userId}
                 ) AS uv
                 ON
-                    v."serverId" = s.id`
+                    uv."serverId" = s.id`
                     : empty
                 }
                 WHERE 
