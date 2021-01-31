@@ -178,7 +178,7 @@ export const Query = queryType({
                                 "authorId" = ${userId}
                         ) AS uv
                         ON
-                            v."serverId" = s.id`
+                            uv."serverId" = s.id`
                         : empty
                     }
                 WHERE (s.published = true ${
@@ -364,7 +364,7 @@ export const Query = queryType({
                                 "authorId" = ${userId}
                         ) AS uv
                         ON
-                            v."serverId" = server.id`
+                            uv."serverId" = server.id`
                         : empty
                     }
                 WHERE
@@ -524,7 +524,7 @@ export const Query = queryType({
                                   "authorId" = ${userId}
                           ) AS uv
                           ON
-                              v."serverId" = server.id`
+                              uv."serverId" = server.id`
                           : empty
                       }
                   WHERE
