@@ -5,10 +5,10 @@ import microCors from 'micro-cors'
 
 export const ALLOWED_ORIGIN: string = process.env.ALLOWED_ORIGIN!
 
-const cors = microCors({
-  allowCredentials: true,
-  origin: '*.csb.app',
-})
+// const cors = microCors({
+//   allowCredentials: true,
+//   origin: '*.csb.app',
+// })
 
 const server = new ApolloServer({
   schema,
@@ -20,6 +20,8 @@ const server = new ApolloServer({
 const handler = server.createHandler({
   path: '/api',
 })
+
+const cors = (req, res) => {}
 
 // This is important or cors will fail at preflight
 export default cors((req, res) =>
