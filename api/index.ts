@@ -1,7 +1,6 @@
 import { ApolloServer } from 'apollo-server-micro'
 import { schema } from './_lib/schema'
 import { createContext } from './_lib/context'
-import microCors from 'micro-cors'
 import { IncomingMessage, ServerResponse } from 'http'
 
 export const ALLOWED_ORIGIN: string[] = process.env.ALLOWED_ORIGIN!.split(' ')
