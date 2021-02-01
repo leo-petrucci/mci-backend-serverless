@@ -7,7 +7,7 @@ export const ALLOWED_ORIGIN: string = process.env.ALLOWED_ORIGIN!
 
 const cors = microCors({
   allowCredentials: true,
-  origin: ALLOWED_ORIGIN,
+  origin: '*.csb.app',
 })
 
 const server = new ApolloServer({
