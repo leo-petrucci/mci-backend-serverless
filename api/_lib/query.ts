@@ -45,7 +45,7 @@ export const Query = queryType({
     t.list.field('allServers', {
       type: 'Server',
       resolve: (parent, args, ctx): Promise<any> => {
-        return ctx.prisma.server.findMany()
+        return ctx.prisma.server.findMany({ where: { published: true } })
       },
     })
 

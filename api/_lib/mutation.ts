@@ -71,6 +71,7 @@ export const Mutation = mutationType({
         } catch (error) {
           return error
         }
+
         const user = await ctx.prisma.user.upsert({
           where: { id: userProfile.id },
           create: {

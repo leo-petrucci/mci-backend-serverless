@@ -117,25 +117,23 @@ export async function getMciToken(
   expires_in: number
   refresh_token: string
 }> {
-  const data = await axios
-    .post(
-      `https://www.minecraftitalia.net/oauth/token/`,
-      qs.stringify({
-        client_id: process.env.USER_CLIENT_ID,
-        code,
-        redirect_uri: process.env.REDIRECT_URI,
-        client_secret: process.env.USER_CLIENT_SECRET,
-        scope: 'profile',
-        grant_type: 'authorization_code',
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+  const { data } = await axios.post(
+    `https://www.minecraftitalia.net/oauth/token/`,
+    qs.stringify({
+      client_id: process.env.USER_CLIENT_ID,
+      code,
+      redirect_uri: process.env.REDIRECT_URI,
+      client_secret: process.env.USER_CLIENT_SECRET,
+      scope: 'profile',
+      grant_type: 'authorization_code',
+    }),
+    {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-    )
-    .then((res) => res.data)
-    .catch((error) => error.response.data)
+    },
+  )
+
   if (!data.access_token) {
     throw new Error(
       `There was a problem fetching your token. ${data.error} - ${data.error_description}`,
