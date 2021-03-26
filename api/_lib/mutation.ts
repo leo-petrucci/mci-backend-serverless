@@ -22,6 +22,7 @@ import {
   getDates,
   verifyRefreshToken,
   deleteTokens,
+  handleTokenRefresh,
 } from './utils'
 import { MaybePromise } from 'nexus/dist/core'
 let cookie = require('cookie')
@@ -99,28 +100,15 @@ export const Mutation = mutationType({
     })
 
     t.field('refresh', {
-      type: 'AuthPayload',
+      type: 'Boolean',
       resolve: async (_parent, args, ctx): Promise<any> => {
-        let userId
         try {
-          userId = verifyRefreshToken(ctx)
-        } catch (err) {
-          return new Error(err)
+          handleTokenRefresh(ctx)
+        } catch (error) {
+          return error
         }
 
-        const user = await ctx.prisma.user.findUnique({
-          where: { id: Number(userId) },
-        })
-
-        if (user) {
-          await issueTokens(ctx, user)
-        } else {
-          return new Error('Could not refresh token.')
-        }
-
-        return {
-          user,
-        }
+        return true
       },
     })
 

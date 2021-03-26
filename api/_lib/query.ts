@@ -1,6 +1,8 @@
 import { empty, sql } from '@prisma/client'
 import { intArg, nonNull, nullable, queryType, stringArg } from 'nexus'
-import { getDates, getUserId, getUserRole } from './utils'
+import { getDates, getUserId, getUserRole, handleTokenRefresh } from './utils'
+
+const cookie = require('cookie')
 
 export const Query = queryType({
   definition(t) {
@@ -59,6 +61,13 @@ export const Query = queryType({
       resolve: async (parent, { date, page, search }, ctx) => {
         const pageLimit = 10
         const [d, f] = getDates(date)
+
+        try {
+          // @ts-ignore
+          ctx = await handleTokenRefresh(ctx)
+        } catch (error) {
+          return error
+        }
 
         let userId
         try {

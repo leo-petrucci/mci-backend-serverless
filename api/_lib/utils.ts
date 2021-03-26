@@ -70,7 +70,7 @@ export async function issueTokens(ctx: Context, user: User) {
     { userId: user.id, role: user.role, banned: user.banned },
     APP_SECRET,
     {
-      expiresIn: 60000 * 15,
+      expiresIn: 60000 * 1,
     },
   )
 
@@ -78,14 +78,44 @@ export async function issueTokens(ctx: Context, user: User) {
     expiresIn: 60000 * 15,
   })
 
-  ctx.res.setHeader('Set-Cookie', [
+  const cookies = [
     `accessToken=${securedAccessToken}; HttpOnly; Expires=${new Date(
-      Date.now() + 60000 * 15,
+      Date.now() + 60000 * 1,
     )};`,
     `refreshToken=${securedRefreshToken}; HttpOnly; Expires=${new Date(
       Date.now() + 60000 * 60 * 24 * 30,
     )};`,
-  ])
+  ]
+
+  ctx.res.setHeader('Set-Cookie', cookies)
+  ctx.req.headers.cookie = cookies.join()
+
+  return ctx
+}
+
+export async function handleTokenRefresh(
+  ctx: Context,
+): Promise<Context | Error> {
+  let userId
+  try {
+    userId = verifyRefreshToken(ctx)
+  } catch (err) {
+    return new Error(err)
+  }
+
+  // if (cookie.parse(ctx.req.headers['cookie']).accessToken) {
+  //   return ctx
+  // }
+
+  const user = await ctx.prisma.user.findUnique({
+    where: { id: Number(userId) },
+  })
+
+  if (user) {
+    return await issueTokens(ctx, user)
+  } else {
+    return new Error('Could not refresh token.')
+  }
 }
 
 export async function deleteTokens(ctx: Context) {
