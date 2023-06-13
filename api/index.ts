@@ -23,7 +23,10 @@ export default (req: IncomingMessage, res: ServerResponse) => {
     'Origin, X-Requested-With, Content-Type, Accept',
   )
   const origin = req.headers.origin!
+  console.log(origin)
   if (ALLOWED_ORIGIN.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+  } else {
     res.setHeader('Access-Control-Allow-Origin', origin)
   }
   res.setHeader('Access-Control-Allow-Credentials', 'true')
