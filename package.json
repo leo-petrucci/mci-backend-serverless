@@ -58,6 +58,6 @@
     "trailingComma": "all"
   },
   "engines": {
-    "node": "18.x"
+    "node": "14.x"
   }
 }
